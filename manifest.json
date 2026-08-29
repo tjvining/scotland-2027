@@ -1,0 +1,12 @@
+{
+  "name": "Scotland 2026 Trip Planner",
+  "short_name": "Scotland 2026",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#12161a",
+  "theme_color": "#2f6b45",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

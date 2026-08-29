@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scotland 2026</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%B0%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="theme-color" content="#2f6b45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Scotland 2026">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;0,900;1,500;1,600&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -494,7 +500,7 @@
   .cal-day.empty-slot{background:none; border:none; padding:0; cursor:default; pointer-events:none;}
   .cal-day.pending-start{background:var(--accent); color:var(--accent-ink); font-weight:700;}
 
-  .card-link{cursor:pointer; transition:border-color .12s ease;}
+  .card-link{display:block; text-decoration:none; color:inherit; cursor:pointer; transition:border-color .12s ease;}
   .card-link:hover{border-color:var(--accent);}
   .trip-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); row-gap:2px; column-gap:0; margin-top:6px;}
   .trip-cal-day{
@@ -2265,6 +2271,102 @@
     "2026-09-20": "edinburgh2", "2026-09-21": "edinburgh2", "2026-09-22": "edinburgh2"
   };
   var TRIP_LOCATION_COLORS = { nyc: "#b8860b", edinburgh1: "#4d7ea8", inverness: "#4f6b52", edinburgh2: "#3d7a8c" };
+  var TRIP_LOCATION_CITY = { nyc: "New York", edinburgh1: "Edinburgh", inverness: "Inverness", edinburgh2: "Edinburgh" };
+
+  function currentTripLocationKey(){
+    if (!state.trip.startDate || !state.trip.endDate) return null;
+    var now = new Date();
+    var todayIso = isoDate(now.getFullYear(), now.getMonth(), now.getDate());
+    if (todayIso < state.trip.startDate) return TRIP_DAY_LOCATIONS[state.trip.startDate] || null;
+    if (todayIso > state.trip.endDate) return null;
+    return TRIP_DAY_LOCATIONS[todayIso] || null;
+  }
+
+  var weatherCache = {};
+
+  function weatherIcon(code){
+    if (code === 0) return "☀️";
+    if (code === 1 || code === 2) return "🌤️";
+    if (code === 3) return "☁️";
+    if (code >= 45 && code <= 48) return "🌫️";
+    if (code >= 51 && code <= 67) return "🌧️";
+    if (code >= 71 && code <= 77) return "❄️";
+    if (code >= 80 && code <= 82) return "🌦️";
+    if (code >= 85 && code <= 86) return "🌨️";
+    if (code >= 95) return "⛈️";
+    return "🌡️";
+  }
+
+  function weatherLabel(code){
+    if (code === 0) return "Clear";
+    if (code === 1) return "Mostly clear";
+    if (code === 2) return "Partly cloudy";
+    if (code === 3) return "Overcast";
+    if (code >= 45 && code <= 48) return "Foggy";
+    if (code >= 51 && code <= 57) return "Drizzle";
+    if (code >= 61 && code <= 67) return "Rain";
+    if (code >= 71 && code <= 77) return "Snow";
+    if (code >= 80 && code <= 82) return "Rain showers";
+    if (code >= 85 && code <= 86) return "Snow showers";
+    if (code >= 95) return "Thunderstorms";
+    return "Mixed";
+  }
+
+  function fetchWeather(destinationName){
+    if (weatherCache[destinationName]) return Promise.resolve(weatherCache[destinationName]);
+    var geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&name=" + encodeURIComponent(destinationName);
+    return fetch(geoUrl).then(function(r){ return r.json(); }).then(function(geo){
+      var place = geo && geo.results && geo.results[0];
+      if (!place) throw new Error("no location found");
+      var wxUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + place.latitude + "&longitude=" + place.longitude +
+        "&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max,windspeed_10m_max&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=auto&forecast_days=1";
+      return fetch(wxUrl).then(function(r){ return r.json(); }).then(function(wx){
+        var code = wx.daily.weathercode[0];
+        var result = {
+          high: Math.round(wx.daily.temperature_2m_max[0]),
+          low: Math.round(wx.daily.temperature_2m_min[0]),
+          icon: weatherIcon(code),
+          label: weatherLabel(code),
+          precip: Math.round(wx.daily.precipitation_probability_max[0]),
+          wind: Math.round(wx.daily.windspeed_10m_max[0])
+        };
+        weatherCache[destinationName] = result;
+        return result;
+      });
+    });
+  }
+
+  function renderWeatherCard(){
+    var locKey = currentTripLocationKey();
+    if (!locKey) return "";
+    var city = TRIP_LOCATION_CITY[locKey];
+    var weatherUrl = "https://www.google.com/search?q=" + encodeURIComponent("weather in " + city);
+    return '<a class="card card-link" id="weather-card" data-weather-city="' + escapeAttr(city) + '" href="' + escapeAttr(weatherUrl) + '" target="_blank" rel="noopener">' +
+      '<div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Weather in ' + escapeHtml(city) + ' →</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;">' +
+        '<span style="font-size:26px;line-height:1;" id="weather-icon">⋯</span>' +
+        '<span class="mono" style="font-size:16px;font-weight:600;" id="weather-temp">--°/--°</span>' +
+      '</div>' +
+      '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;" id="weather-detail">Loading…</div>' +
+    '</a>';
+  }
+
+  function loadOverviewWeather(){
+    var card = document.getElementById("weather-card");
+    if (!card) return;
+    var city = card.dataset.weatherCity;
+    fetchWeather(city).then(function(wx){
+      if (!document.getElementById("weather-card") || document.getElementById("weather-card").dataset.weatherCity !== city) return;
+      document.getElementById("weather-icon").textContent = wx.icon;
+      document.getElementById("weather-temp").textContent = wx.high + "°/" + wx.low + "°";
+      document.getElementById("weather-detail").textContent = wx.label + " · " + wx.precip + "% rain · " + wx.wind + " mph wind";
+    }).catch(function(){
+      if (!document.getElementById("weather-card") || document.getElementById("weather-card").dataset.weatherCity !== city) return;
+      document.getElementById("weather-icon").textContent = "—";
+      document.getElementById("weather-temp").textContent = "";
+      document.getElementById("weather-detail").textContent = "Couldn't load weather";
+    });
+  }
 
   function renderTripCalendar(linked){
     if (!state.trip.startDate || !state.trip.endDate) return "";
@@ -2324,12 +2426,14 @@
 
     var html = '<div class="section-head"><div><h2>Overview</h2></div></div>';
     html += '<div class="row-stretch">' + renderCountdown(state.trip.startDate, state.trip.endDate) + renderTripCalendar(true) + '</div>';
+    html += '<div class="row-stretch">' + renderWeatherCard() +
+      '<div class="card card-link" data-tab="budget" id="spend-card-el"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Trip spend so far</div>' +
+      '<div class="mono" style="font-size:18px;font-weight:600;">' + fmtCents(totalCents) + '</div>' +
+      '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;">' + state.expenses.length + ' expense' + (state.expenses.length===1?"":"s") + ' · ' + state.participants.length + ' people</div></div>' +
+    '</div>';
     html += '<div class="card" style="padding:8px;">' +
       '<iframe data-testid="embed-iframe" style="border-radius:12px;display:block;" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX1lHf6fzlf1u?utm_source=generator&theme=0&si=ff1ba991c5a748e6" width="100%" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>' +
     '</div>';
-    html += '<div class="card card-link" data-tab="budget"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Trip spend so far</div>' +
-      '<div class="mono" style="font-size:18px;font-weight:600;">' + fmtCents(totalCents) + '</div>' +
-      '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;">' + state.expenses.length + ' expense' + (state.expenses.length===1?"":"s") + ' · ' + state.participants.length + ' people</div></div>';
 
     html += renderStats();
 
@@ -2338,15 +2442,24 @@
 
     document.getElementById("panel-overview").innerHTML = html;
     requestAnimationFrame(syncOverviewCardHeights);
+    loadOverviewWeather();
+  }
+
+  function syncCardPairHeight(idA, idB){
+    var a = document.getElementById(idA);
+    var b = document.getElementById(idB);
+    if (!a || !b) return;
+    a.style.height = "";
+    b.style.height = "";
+    if (window.innerWidth < 640) return;
+    var maxH = Math.max(a.offsetHeight, b.offsetHeight);
+    a.style.height = maxH + "px";
+    b.style.height = maxH + "px";
   }
 
   function syncOverviewCardHeights(){
-    var countdownEl = document.getElementById("countdown-card-el");
-    var calEl = document.getElementById("trip-calendar-card");
-    if (!countdownEl || !calEl) return;
-    countdownEl.style.height = "";
-    if (window.innerWidth < 640) return;
-    countdownEl.style.height = calEl.offsetHeight + "px";
+    syncCardPairHeight("trip-calendar-card", "countdown-card-el");
+    syncCardPairHeight("weather-card", "spend-card-el");
   }
 
   var overviewResizeTimer = null;
