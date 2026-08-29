@@ -1536,7 +1536,7 @@
         } else {
           state.expenses.push({
             id: uid("exp"), description: desc, amountCents: amount, paidBy: payer, splitAmong: splitAmong,
-            splitMode: splitMode, splitValues: cleanValues, category: category, settledBy: [], ts: Date.now()
+            splitMode: splitMode, splitValues: cleanValues, category: category, settledBy: [], ts: Date.now(), comments: []
           });
           logActivity('added expense "' + desc + '" (' + fmtCents(amount) + '), paid by ' + participantName(payer), "money");
         }
@@ -1614,6 +1614,8 @@
       var moment = (state.itinerary[i].moments || []).find(function(m){ return m.id === id; });
       if (moment) return { item: moment, listKey: "itinerary" };
     }
+    var expense = state.expenses.find(function(e){ return e.id === id; });
+    if (expense) return { item: expense, listKey: "expenses" };
     return null;
   }
 
@@ -1621,6 +1623,7 @@
     var item = found.item;
     if (found.listKey === "lodging") return item.name;
     if (found.listKey === "flights") return (item.from || "?") + " → " + (item.to || "?");
+    if (found.listKey === "expenses") return item.description || "expense";
     return truncateText(item.text || "itinerary item", 40);
   }
 
@@ -2460,7 +2463,9 @@
           (owers.length ? '<div class="settle-row">' + chips + '</div>' : '') +
           '</div><div class="amt mono" style="font-weight:600;font-size:15px;min-width:80px;">' + fmtCents(e.amountCents) + '</div>' +
           '<div class="row-actions"><button class="icon-only" data-editexp="' + e.id + '" title="Edit">✎</button><button class="icon-only" data-delexp="' + e.id + '" title="Delete">✕</button></div>' +
-          '</div></div>';
+          '</div>' +
+          '<div class="comment-zone">' + renderComments(e) + '</div>' +
+          '</div>';
       });
     }
     document.getElementById("panel-budget").innerHTML = html;
@@ -3231,6 +3236,7 @@
       e.splitMode = e.splitMode || "equal";
       e.splitValues = e.splitValues || {};
       e.category = e.category || "Other";
+      e.comments = e.comments || [];
     });
     if (!state.activity) state.activity = [];
     if (!state.featureRequests) state.featureRequests = [];
