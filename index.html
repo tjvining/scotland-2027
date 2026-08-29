@@ -181,6 +181,12 @@
   .stack{display:flex; flex-direction:column; gap:10px;}
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
   @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .row-stretch{display:flex; gap:10px; margin-bottom:10px;}
+  .row-stretch > *.card{flex:1 1 0; min-width:0; margin-bottom:0; box-sizing:border-box;}
+  @media (max-width:640px){
+    .row-stretch{flex-direction:column;}
+    .row-stretch > *.card{margin-bottom:10px !important; height:auto !important;}
+  }
 
   .vote-row{display:flex; align-items:center; gap:12px;}
   .drag-handle{color:var(--text-muted); cursor:grab; font-size:15px; line-height:1; flex:none; touch-action:none;}
@@ -274,8 +280,8 @@
   .comment-input-row{display:flex; gap:6px;}
   .comment-input-row input{flex:1;}
 
-  .countdown-card{display:flex; align-items:center; gap:20px; padding:24px; margin-bottom:16px; background:var(--accent); border:none;}
-  .countdown-big{font-size:58px; font-weight:700; font-style:italic; color:var(--accent-ink); line-height:1; flex:none; font-family:var(--font-poster);}
+  .countdown-card{display:flex; align-items:center; gap:16px; padding:18px; margin-bottom:16px; background:var(--accent); border:none;}
+  .countdown-big{font-size:46px; font-weight:700; font-style:italic; color:var(--accent-ink); line-height:1; flex:none; font-family:var(--font-poster);}
   .countdown-copy{display:flex; flex-direction:column; gap:3px; min-width:0;}
   .countdown-label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent-ink); opacity:.8; font-weight:700; font-family:var(--font-ui);}
   .countdown-small{font-size:15px; color:var(--accent-ink); font-weight:600;}
@@ -488,6 +494,20 @@
   .cal-day.empty-slot{background:none; border:none; padding:0; cursor:default; pointer-events:none;}
   .cal-day.pending-start{background:var(--accent); color:var(--accent-ink); font-weight:700;}
 
+  .card-link{cursor:pointer; transition:border-color .12s ease;}
+  .card-link:hover{border-color:var(--accent);}
+  .trip-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); row-gap:2px; column-gap:0; margin-top:6px;}
+  .trip-cal-day{
+    height:20px; margin-right:2px; border-radius:3px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:9.5px; font-weight:700; overflow:hidden;
+  }
+  .trip-cal-day-out{color:var(--text-muted); opacity:.4;}
+  .trip-cal-day-mapped{color:#fff;}
+  .trip-cal-legend{display:flex; flex-wrap:wrap; gap:6px 10px; margin-top:8px; font-size:10px; color:var(--text-muted); font-family:var(--font-ui);}
+  .trip-cal-legend-item{display:flex; align-items:center; gap:4px;}
+  .trip-cal-legend-dot{width:7px; height:7px; border-radius:2px; flex:none;}
+
   .bg-watermark{
     position:fixed; left:0; right:0; bottom:0; width:100%; height:42vh; min-height:260px;
     z-index:0; pointer-events:none; opacity:.5;
@@ -598,7 +618,7 @@
 </div>
 
 <nav class="tabs" id="tabs">
-  <button data-tab="overview" class="active" draggable="true" title="Drag to reorder tabs">🏔️ Overview</button>
+  <button data-tab="overview" class="active" draggable="true" title="Drag to reorder tabs">🏰 Overview</button>
   <button data-tab="lodging" draggable="true" title="Drag to reorder tabs">🏠 Lodging</button>
   <button data-tab="flights" draggable="true" title="Drag to reorder tabs">✈️ Flights</button>
   <button data-tab="itinerary" draggable="true" title="Drag to reorder tabs">🗒️ Itinerary</button>
@@ -1785,6 +1805,7 @@
 
   function renderItinerary(){
     var html = '<div class="section-head"><div><h2>Itinerary</h2><p>Drag days to reorder — events group by Morning / Afternoon / Evening / Late.</p></div><button class="btn" data-add-day>+ Add a day</button></div>';
+    html += renderTripCalendar(false);
     if (!state.itinerary.length){
       html += '<div class="empty">Nothing on the itinerary yet — add the first day.</div>';
     } else {
@@ -2191,7 +2212,7 @@
       big = "🎉"; label = "in the books";
       small = "Hope it was epic — " + rangeLabel;
     }
-    return '<div class="card countdown-card"><div class="countdown-big mono">' + big + '</div>' +
+    return '<div class="card countdown-card" id="countdown-card-el"><div class="countdown-big mono">' + big + '</div>' +
       '<div class="countdown-copy"><div class="countdown-label">' + label + '</div><div class="countdown-small">' + small + '</div></div></div>';
   }
 
@@ -2236,12 +2257,77 @@
     return html;
   }
 
+  var TRIP_DAY_LOCATIONS = {
+    "2026-09-12": "nyc", "2026-09-13": "nyc",
+    "2026-09-14": "edinburgh1", "2026-09-15": "edinburgh1",
+    "2026-09-16": "inverness", "2026-09-17": "inverness",
+    "2026-09-18": "edinburgh2", "2026-09-19": "edinburgh2",
+    "2026-09-20": "edinburgh2", "2026-09-21": "edinburgh2", "2026-09-22": "edinburgh2"
+  };
+  var TRIP_LOCATION_COLORS = { nyc: "#b8860b", edinburgh1: "#4d7ea8", inverness: "#4f6b52", edinburgh2: "#3d7a8c" };
+
+  function renderTripCalendar(linked){
+    if (!state.trip.startDate || !state.trip.endDate) return "";
+    var start = new Date(state.trip.startDate + "T00:00:00");
+    var end = new Date(state.trip.endDate + "T00:00:00");
+    var gridStart = new Date(start);
+    gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+    var gridEnd = new Date(end);
+    gridEnd.setDate(gridEnd.getDate() + (6 - gridEnd.getDay()));
+
+    var days = [];
+    var cursor = new Date(gridStart);
+    while (cursor <= gridEnd){
+      var iso = isoDate(cursor.getFullYear(), cursor.getMonth(), cursor.getDate());
+      var inTrip = iso >= state.trip.startDate && iso <= state.trip.endDate;
+      days.push({ num: cursor.getDate(), inTrip: inTrip, loc: inTrip ? (TRIP_DAY_LOCATIONS[iso] || null) : null });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    var weekdaysHtml = ["S","M","T","W","T","F","S"].map(function(w){ return '<div class="cal-weekday">' + w + '</div>'; }).join("");
+
+    var cellsHtml = weekdaysHtml + days.map(function(day, i){
+      if (!day.loc){
+        return '<div class="trip-cal-day trip-cal-day-out">' + (day.inTrip ? day.num : "") + '</div>';
+      }
+      var col = i % 7;
+      var prev = days[i - 1];
+      var next = days[i + 1];
+      var isStart = col === 0 || !prev || prev.loc !== day.loc;
+      var isEnd = col === 6 || !next || next.loc !== day.loc;
+      var connectsRight = col !== 6 && next && next.loc === day.loc;
+      var radius = (isStart && isEnd) ? "10px" : isStart ? "10px 0 0 10px" : isEnd ? "0 10px 10px 0" : "0";
+      var style = "background:" + TRIP_LOCATION_COLORS[day.loc] + "; border-radius:" + radius + ";" + (connectsRight ? " margin-right:0;" : "");
+      return '<div class="trip-cal-day trip-cal-day-mapped" style="' + style + '">' + day.num + '</div>';
+    }).join("");
+
+    var shortLabels = { nyc: "NYC", edinburgh1: "Edinburgh 1", inverness: "Inverness", edinburgh2: "Edinburgh 2" };
+    var seen = {};
+    var legendHtml = LODGING_SECTIONS.filter(function(s){
+      var used = Object.keys(TRIP_DAY_LOCATIONS).some(function(d){ return TRIP_DAY_LOCATIONS[d] === s; });
+      if (!used || seen[s]) return false;
+      seen[s] = true;
+      return true;
+    }).map(function(s){
+      return '<div class="trip-cal-legend-item"><span class="trip-cal-legend-dot" style="background:' + TRIP_LOCATION_COLORS[s] + ';"></span>' + shortLabels[s] + '</div>';
+    }).join("");
+
+    return '<div class="card' + (linked ? ' card-link" data-tab="itinerary" id="trip-calendar-card"' : '"') + '>' +
+      '<div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Where we\'ll be' + (linked ? ' →' : '') + '</div>' +
+      '<div class="trip-cal-grid">' + cellsHtml + '</div>' +
+      '<div class="trip-cal-legend">' + legendHtml + '</div>' +
+    '</div>';
+  }
+
   function renderOverview(){
     var totalCents = state.expenses.reduce(function(s,e){ return s + e.amountCents; }, 0);
 
     var html = '<div class="section-head"><div><h2>Overview</h2></div></div>';
-    html += renderCountdown(state.trip.startDate, state.trip.endDate);
-    html += '<div class="card"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Trip spend so far</div>' +
+    html += '<div class="row-stretch">' + renderCountdown(state.trip.startDate, state.trip.endDate) + renderTripCalendar(true) + '</div>';
+    html += '<div class="card" style="padding:8px;">' +
+      '<iframe data-testid="embed-iframe" style="border-radius:12px;display:block;" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX1lHf6fzlf1u?utm_source=generator&theme=0&si=ff1ba991c5a748e6" width="100%" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>' +
+    '</div>';
+    html += '<div class="card card-link" data-tab="budget"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Trip spend so far</div>' +
       '<div class="mono" style="font-size:18px;font-weight:600;">' + fmtCents(totalCents) + '</div>' +
       '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;">' + state.expenses.length + ' expense' + (state.expenses.length===1?"":"s") + ' · ' + state.participants.length + ' people</div></div>';
 
@@ -2251,7 +2337,23 @@
     html += renderCrew();
 
     document.getElementById("panel-overview").innerHTML = html;
+    requestAnimationFrame(syncOverviewCardHeights);
   }
+
+  function syncOverviewCardHeights(){
+    var countdownEl = document.getElementById("countdown-card-el");
+    var calEl = document.getElementById("trip-calendar-card");
+    if (!countdownEl || !calEl) return;
+    countdownEl.style.height = "";
+    if (window.innerWidth < 640) return;
+    countdownEl.style.height = calEl.offsetHeight + "px";
+  }
+
+  var overviewResizeTimer = null;
+  window.addEventListener("resize", function(){
+    clearTimeout(overviewResizeTimer);
+    overviewResizeTimer = setTimeout(syncOverviewCardHeights, 150);
+  });
 
   function renderCrew(){
     var mine = myId();
