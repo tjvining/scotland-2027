@@ -1,0 +1,3233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scotland 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%B0%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;0,900;1,500;1,600&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f3; --surface:#ffffff; --surface-2:#f7f8fa; --border:#d7dde2;
+    --text:#1a2226; --text-muted:#5c6b74;
+    --accent:#2f6b45; --accent-ink:#ffffff;
+    --navy:#4d8fd6;
+    --good:#1f8a4c; --good-bg:#e5f4ea;
+    --bad:#c23b3b; --bad-bg:#fbe9e9;
+    --radius:5px;
+    --font-ui:"Work Sans",system-ui,sans-serif;
+    --font-head:"Fraunces","Georgia",serif;
+    --font-poster:"Fraunces","Georgia",serif;
+    --font-mono:"Space Mono",ui-monospace,monospace;
+    --sky-top:#bcd8ec; --sky-bottom:#fbe0c4; --sky-sun:#ffd27a;
+    --hill-back:#b9c7b2; --hill-mid:#8ba888; --hill-front:#4f6b52; --loch:#5b8fa8;
+  }
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]){
+    --bg:#12161a; --surface:#1a1f24; --surface-2:#20262c; --border:#2b333a;
+    --text:#e7ecef; --text-muted:#93a1ab;
+    --accent:#4caf7a; --accent-ink:#0d1f14;
+    --navy:#4d8fd6;
+    --good:#3ecb76; --good-bg:#153621;
+    --bad:#ff6b6b; --bad-bg:#3a1c1c;
+    --sky-top:#0c1220; --sky-bottom:#3d2b40; --sky-sun:#f2c879;
+    --hill-back:#2a3230; --hill-mid:#1f2b23; --hill-front:#141d17; --loch:#2c4a58;
+  }
+  :root[data-theme="light"]{
+    --bg:#eef1f3; --surface:#ffffff; --surface-2:#f7f8fa; --border:#d7dde2;
+    --text:#1a2226; --text-muted:#5c6b74;
+    --accent:#2f6b45; --accent-ink:#ffffff;
+    --navy:#4d8fd6;
+    --good:#1f8a4c; --good-bg:#e5f4ea;
+    --bad:#c23b3b; --bad-bg:#fbe9e9;
+    --sky-top:#bcd8ec; --sky-bottom:#fbe0c4; --sky-sun:#ffd27a;
+    --hill-back:#b9c7b2; --hill-mid:#8ba888; --hill-front:#4f6b52; --loch:#5b8fa8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background-color:var(--bg);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+    color:var(--text); font-family:var(--font-ui);
+    font-size:15px; line-height:1.5; min-height:100vh;
+  }
+  h1,h2,h3{font-family:var(--font-poster); font-weight:600; text-wrap:balance; margin:0; letter-spacing:0;}
+  button,input,select,textarea{font-family:inherit; font-size:inherit; color:inherit;}
+  .mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums;}
+  a{color:var(--accent);}
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:16px 20px; border-bottom:1px solid var(--border); background:var(--surface);
+    position:sticky; top:0; z-index:10; flex-wrap:wrap;
+  }
+  .topbar h1{font-size:26px; font-style:italic; font-weight:600;}
+  .topbar .sub{color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.12em; font-family:var(--font-ui); font-weight:600;}
+  .topbar-right{display:flex; align-items:center; gap:10px;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .mark{flex:none;}
+
+  .scotland-clock{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    padding:6px 20px; border:1px solid var(--border); border-radius:8px; background:var(--surface-2);
+    flex:none;
+  }
+  .scotland-clock-label{font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:var(--text-muted); font-weight:700; font-family:var(--font-ui);}
+  .scotland-clock-time{font-family:var(--font-mono); font-size:30px; font-weight:700; line-height:1.15; color:var(--accent); font-variant-numeric:tabular-nums;}
+  @media (max-width:640px){
+    .scotland-clock{padding:5px 14px;}
+    .scotland-clock-time{font-size:22px;}
+  }
+
+  .chip{
+    display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+    background:var(--surface-2); border:1px solid var(--border); font-size:13px; cursor:pointer;
+  }
+  .avatar{
+    width:22px; height:22px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex:none;
+    font-family:var(--font-ui); line-height:1; text-align:center; padding:0;
+  }
+
+  [data-tip]{position:relative;}
+  [data-tip]::after{
+    content:attr(data-tip);
+    position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%) translateY(4px);
+    background:var(--text); color:var(--bg);
+    font-family:var(--font-ui); font-size:11px; font-weight:600; letter-spacing:.02em;
+    padding:5px 9px; border-radius:4px; white-space:nowrap;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .12s ease, transform .12s ease;
+    z-index:60;
+  }
+  [data-tip]::before{
+    content:""; position:absolute; left:50%; bottom:100%; transform:translateX(-50%) translateY(4px);
+    border:5px solid transparent; border-top-color:var(--text);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .12s ease, transform .12s ease;
+    z-index:60;
+  }
+  [data-tip]:hover::after, [data-tip]:hover::before{
+    opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+  }
+  .iconbtn{
+    width:32px; height:32px; border-radius:4px; border:1px solid var(--border); background:var(--surface-2);
+    cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:15px;
+  }
+  .iconbtn:hover, .chip:hover{border-color:var(--accent);}
+
+  nav.tabs{
+    display:flex; gap:2px; padding:0 20px; border-bottom:1px solid var(--border); background:var(--surface-2);
+    overflow-x:auto; position:relative; z-index:1;
+  }
+  nav.tabs button{
+    background:none; border:none; padding:13px 14px; cursor:grab; color:var(--text-muted);
+    font-family:var(--font-ui); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.07em;
+    border-bottom:2px solid transparent; white-space:nowrap;
+  }
+  nav.tabs button.active{color:var(--text); border-bottom-color:var(--accent);}
+  nav.tabs button.dragging{opacity:.4; cursor:grabbing;}
+  nav.tabs button:hover{color:var(--text);}
+
+  main{max-width:920px; margin:0 auto; padding:24px 20px 80px; position:relative; z-index:1;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; gap:10px; flex-wrap:wrap;}
+  .section-head h2{font-size:27px;}
+  .section-head p{color:var(--text-muted); font-size:13px; margin:3px 0 0; font-style:italic;}
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:10px;
+  }
+  .card.has-photo{padding:0; overflow:hidden;}
+  .card.has-photo .card-body{padding:14px 16px;}
+  .card.has-photo > a{display:block;}
+  .lodging-photo{display:block; width:100%; height:150px; object-fit:cover; background:var(--surface-2);}
+  .lodging-status-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;}
+  .lodging-status{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:3px 8px; border-radius:999px; background:var(--surface-2);}
+  .lodging-status-good{color:var(--good); background:var(--good-bg);}
+  .lodging-status-pending{color:var(--text-muted);}
+  .stack{display:flex; flex-direction:column; gap:10px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .vote-row{display:flex; align-items:center; gap:12px;}
+  .drag-handle{color:var(--text-muted); cursor:grab; font-size:15px; line-height:1; flex:none; touch-action:none;}
+  .drag-handle:active{cursor:grabbing;}
+  [data-drag-id].dragging{opacity:.4;}
+  [data-drag-id].drag-over{box-shadow:0 -2px 0 0 var(--accent);}
+  [data-flight-drag-id].dragging{opacity:.4;}
+  [data-flight-drag-id].drag-over{box-shadow:0 -2px 0 0 var(--accent);}
+  .vote-row .info{flex:1; min-width:0;}
+  .vote-row .name{font-weight:600; font-size:15.5px; font-family:var(--font-head);}
+  .meta{color:var(--text-muted); font-size:12.5px; margin-top:2px;}
+  .meta a{color:inherit; text-decoration:underline;}
+
+  .upvote-btn{
+    display:flex; align-items:center; gap:4px; flex:none; padding:4px 9px; border-radius:999px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text-muted);
+    cursor:pointer; font-weight:700; font-size:12px; font-family:var(--font-mono);
+  }
+  .upvote-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .upvote-btn.voted{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+  .avatars{display:flex; margin-top:6px;}
+  .avatars .avatar{margin-right:-6px; border:2px solid var(--surface); width:20px; height:20px; font-size:10px;}
+
+  .flight-people-row{display:flex; align-items:center; gap:10px;}
+  .flight-people{display:flex; align-items:center; gap:10px; min-width:0; flex:1;}
+  .flight-avatars{margin-top:0; flex:none;}
+  .flight-avatars .avatar{width:30px; height:30px; font-size:13px;}
+  .flight-people-names{font-weight:700; font-size:16px; font-family:var(--font-head);}
+  .flight-people-empty{color:var(--text-muted); font-weight:600; font-size:13.5px; font-style:italic; font-family:var(--font-ui);}
+  .flight-route{font-weight:600; font-size:14px; margin-top:10px; font-family:var(--font-ui);}
+
+  .ghost-btn{
+    background:none; border:1px dashed var(--border); color:var(--text-muted); border-radius:var(--radius);
+    padding:10px; cursor:pointer; font-weight:700; font-size:11.5px; width:100%; text-align:center;
+    font-family:var(--font-ui); text-transform:uppercase; letter-spacing:.05em;
+  }
+  .ghost-btn:hover{border-color:var(--accent); color:var(--accent);}
+
+  .btn{
+    background:var(--accent); color:var(--accent-ink); border:none; border-radius:4px;
+    padding:9px 16px; font-weight:700; font-size:12px; cursor:pointer;
+    font-family:var(--font-ui); text-transform:uppercase; letter-spacing:.05em;
+  }
+  .btn.secondary{background:var(--surface-2); color:var(--text); border:1px solid var(--border);}
+  .btn.small{padding:5px 10px; font-size:11px;}
+  .btn:disabled{opacity:.5; cursor:default;}
+
+  .row-actions{display:flex; gap:6px; flex:none;}
+  .icon-only{background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; padding:4px 6px;}
+  .icon-only:hover{color:var(--bad);}
+
+  label{display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-ui);}
+  input[type=text],input[type=number],input[type=date],input[type=url],input[type=password],textarea,select{
+    width:100%; padding:8px 10px; border-radius:4px; border:1px solid var(--border);
+    background:var(--surface-2); color:var(--text);
+  }
+  textarea{font-family:inherit; line-height:1.45; resize:vertical;}
+  .field{margin-bottom:10px;}
+  fieldset{border:none; padding:0; margin:0;}
+
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th,td{text-align:left; padding:8px 6px; border-bottom:1px solid var(--border);}
+  th{color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:.06em; font-weight:600; font-family:var(--font-ui);}
+  .amt{font-family:var(--font-mono); font-variant-numeric:tabular-nums; text-align:right;}
+
+  .balance-pill{
+    padding:2px 8px; border-radius:999px; font-family:var(--font-mono); font-weight:700; font-size:12px;
+  }
+  .balance-pill.owed{background:var(--good-bg); color:var(--good);}
+  .balance-pill.owes{background:var(--bad-bg); color:var(--bad);}
+  .balance-pill.even{background:var(--surface-2); color:var(--text-muted);}
+
+  .settle-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .settle-chip{
+    font-size:10.5px; padding:3px 9px; border-radius:999px; border:1px solid var(--border);
+    background:var(--surface-2); color:var(--text-muted); cursor:pointer; font-weight:700;
+    text-transform:uppercase; letter-spacing:.04em; font-family:var(--font-ui);
+  }
+  .settle-chip:hover{border-color:var(--accent);}
+  .settle-chip.settled{background:var(--good-bg); color:var(--good); border-color:var(--good);}
+
+  .comment-zone{margin-top:2px;}
+  .comment-toggle{background:none; border:none; color:var(--text-muted); font-size:11.5px; cursor:pointer; padding:8px 0 0; text-align:left; font-weight:700; text-transform:uppercase; letter-spacing:.04em; font-family:var(--font-ui);}
+  .comment-toggle:hover{color:var(--accent);}
+  .comment-thread{margin-top:8px; padding-top:10px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px;}
+  .comment-item{display:flex; gap:8px; align-items:flex-start;}
+  .comment-body{flex:1; font-size:13px; line-height:1.4;}
+  .comment-who{font-weight:600; font-size:13px; font-family:var(--font-head);}
+  .comment-when{color:var(--text-muted); font-size:11px; margin-left:6px;}
+  .comment-input-row{display:flex; gap:6px;}
+  .comment-input-row input{flex:1;}
+
+  .countdown-card{display:flex; align-items:center; gap:20px; padding:24px; margin-bottom:16px; background:var(--accent); border:none;}
+  .countdown-big{font-size:58px; font-weight:700; font-style:italic; color:var(--accent-ink); line-height:1; flex:none; font-family:var(--font-poster);}
+  .countdown-copy{display:flex; flex-direction:column; gap:3px; min-width:0;}
+  .countdown-label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent-ink); opacity:.8; font-weight:700; font-family:var(--font-ui);}
+  .countdown-small{font-size:15px; color:var(--accent-ink); font-weight:600;}
+  @media (max-width:480px){.countdown-big{font-size:36px;}}
+
+  .stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  @media (max-width:640px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+  .stat-tile{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px;}
+  .stat-value{font-size:20px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:var(--font-head);}
+  .stat-label{font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; margin-top:3px; font-family:var(--font-ui); font-weight:600;}
+
+  .presence-widget{
+    position:fixed; right:16px; bottom:16px; z-index:50;
+    display:flex; align-items:center; gap:8px; padding:8px 14px 8px 10px;
+    background:var(--surface); border:1px solid var(--border); border-radius:999px;
+    box-shadow:0 4px 16px rgba(0,0,0,.18); font-size:12.5px; font-weight:600; color:var(--text-muted);
+  }
+  .presence-dot{width:8px; height:8px; border-radius:50%; background:var(--good); flex:none; box-shadow:0 0 0 3px var(--good-bg); animation:presence-pulse 2s infinite;}
+  @media (prefers-reduced-motion: reduce){.presence-dot{animation:none;}}
+  @keyframes presence-pulse{0%,100%{opacity:1;} 50%{opacity:.5;}}
+  .presence-avatars{display:flex;}
+  .presence-avatars .avatar{width:20px; height:20px; font-size:9px; margin-right:-6px; border:2px solid var(--surface);}
+  .presence-label{white-space:nowrap;}
+  @media (max-width:520px){.presence-widget .presence-label{display:none;}}
+
+  .chat-fab{
+    position:fixed; right:16px; bottom:66px; z-index:56;
+    width:50px; height:50px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    border:none; cursor:pointer; font-size:21px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+  }
+  .chat-badge{
+    position:absolute; top:-3px; right:-3px; min-width:18px; height:18px; border-radius:999px;
+    background:var(--bad); color:#fff; font-size:10px; font-weight:700; font-family:var(--font-ui);
+    display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid var(--bg);
+  }
+  .chat-panel{
+    position:fixed; right:16px; bottom:126px; z-index:56;
+    width:min(320px, calc(100vw - 32px)); height:min(440px, calc(100vh - 150px));
+    min-width:280px; min-height:280px;
+    max-width:calc(100vw - 32px); max-height:calc(100vh - 150px);
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    box-shadow:0 20px 50px rgba(0,0,0,.3); display:flex; flex-direction:column; overflow:hidden;
+  }
+  .chat-resize-handle{
+    position:absolute; top:0; left:0; width:16px; height:16px; z-index:2; cursor:nwse-resize;
+    background:
+      linear-gradient(135deg, transparent 0 40%, var(--text-muted) 40% 46%, transparent 46% 60%, var(--text-muted) 60% 66%, transparent 66% 100%);
+    opacity:.6;
+  }
+  .chat-resize-handle:hover{opacity:1;}
+  .chat-head{
+    display:flex; align-items:center; justify-content:space-between; padding:12px 14px;
+    border-bottom:1px solid var(--border); font-family:var(--font-head); font-weight:700; font-size:15px; flex:none;
+  }
+  .chat-messages{flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; min-height:120px;}
+  .chat-msg{display:flex; gap:8px; align-items:flex-end; margin-bottom:10px;}
+  .chat-msg.mine{flex-direction:row-reverse;}
+  .chat-msg .avatar{margin-bottom:2px;}
+  .chat-col{display:flex; flex-direction:column; max-width:75%; min-width:0;}
+  .chat-msg.mine .chat-col{align-items:flex-end;}
+  .chat-meta{font-size:10px; color:var(--text-muted); margin-bottom:2px; white-space:nowrap;}
+  .chat-bubble{background:var(--surface-2); border-radius:12px; padding:8px 12px; font-size:13.5px; line-height:1.4; word-break:break-word;}
+  .chat-msg.mine .chat-bubble{background:var(--accent); color:var(--accent-ink);}
+  .chat-input-row{display:flex; gap:6px; padding:10px 12px; border-top:1px solid var(--border); flex:none;}
+  .chat-input-row input{flex:1;}
+
+  .balance-card{padding:0; overflow:hidden;}
+  .balance-row{display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer;}
+  .balance-info{flex:1; min-width:0;}
+  .balance-name{font-weight:600; font-size:14.5px; font-family:var(--font-head);}
+  .balance-sub{color:var(--text-muted); font-size:12px; margin-top:1px;}
+  .balance-caret{color:var(--text-muted); font-size:11px; flex:none;}
+  .balance-breakdown{padding:4px 16px 14px 58px; display:flex; flex-direction:column; gap:6px; border-top:1px solid var(--border); margin-top:0;}
+  .breakdown-row{display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding-top:8px;}
+  .breakdown-desc{color:var(--text-muted);}
+  .breakdown-role{opacity:.75;}
+  .breakdown-amt{font-weight:600; flex:none;}
+  .breakdown-amt.owed{color:var(--good);}
+  .breakdown-amt.owes{color:var(--bad);}
+  .breakdown-total{display:flex; justify-content:space-between; gap:10px; font-size:13px; padding-top:9px; margin-top:2px; border-top:1px solid var(--border); font-weight:700;}
+  .breakdown-total .breakdown-amt{font-size:14px;}
+  .breakdown-who{margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); display:flex; flex-direction:column; gap:6px;}
+  .breakdown-who .breakdown-row{padding-top:0;}
+
+  .math-help-link{background:none; border:none; color:var(--text-muted); font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline; text-underline-offset:2px; font-family:var(--font-ui);}
+  .math-help-link:hover{color:var(--accent);}
+  .math-flow{display:flex; flex-direction:column; margin:10px 0 4px;}
+  .math-step{display:flex; gap:12px; align-items:flex-start;}
+  .math-step-num{
+    flex:none; width:26px; height:26px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12.5px; font-family:var(--font-mono); margin-top:1px;
+  }
+  .math-step-title{font-weight:700; font-size:14px; margin-bottom:3px; font-family:var(--font-head);}
+  .math-step-desc{font-size:12.5px; color:var(--text-muted); line-height:1.55;}
+  .math-step-desc b{color:var(--text); font-weight:700;}
+  .math-arrow{text-align:center; color:var(--text-muted); font-size:15px; padding:2px 0 2px 12px;}
+
+  .flow-card{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border);}
+  .flow-card:last-child{border-bottom:none;}
+  .flow-name{font-size:13.5px; font-weight:600; font-family:var(--font-head);}
+  .flow-arrow{color:var(--text-muted); font-size:15px;}
+  .flow-amount{margin-left:auto; font-weight:700; font-size:15px; color:var(--accent); font-family:var(--font-mono);}
+
+  .empty{color:var(--text-muted); font-size:13.5px; padding:18px; text-align:center; border:1px dashed var(--border); border-radius:var(--radius); font-style:italic;}
+
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(20,15,8,.55); display:flex; align-items:center; justify-content:center;
+    z-index:100; padding:20px;
+  }
+  .modal{
+    background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:22px;
+    width:100%; max-width:380px; max-height:85vh; overflow-y:auto;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+  }
+  .modal h3{font-size:19px; margin-bottom:6px;}
+  .modal-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .modal-head h3{margin-bottom:0;}
+  .modal p{color:var(--text-muted); font-size:13.5px; margin:0 0 14px; font-style:italic;}
+  .modal .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:14px;}
+
+  .welcome-dots{display:flex; justify-content:center; gap:6px; margin:16px 0 4px;}
+  .welcome-dot{width:6px; height:6px; border-radius:50%; background:var(--border); transition:width .15s, border-radius .15s;}
+  .welcome-dot.active{width:16px; border-radius:3px; background:var(--accent);}
+
+  .activity-item{display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px;}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-item .when{color:var(--text-muted); font-size:11px; white-space:nowrap; font-family:var(--font-mono);}
+  .activity-item .dot{width:7px; height:7px; border-radius:50%; flex:none; margin-top:5px; background:var(--text-muted);}
+  .activity-item .dot.vote{background:var(--accent);}
+  .activity-item .dot.join{background:var(--good);}
+  .activity-item .dot.money{background:var(--navy);}
+  .activity-item .dot.remove{background:var(--bad);}
+
+  .crew-card{padding:4px 16px;}
+  .crew-row{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border);}
+  .crew-row:last-child{border-bottom:none;}
+  .crew-name{flex:1; font-weight:600; font-size:14px; font-family:var(--font-head);}
+  .you-tag{font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); background:var(--surface-2); padding:1px 6px; border-radius:999px; margin-left:6px; font-family:var(--font-ui);}
+  .crew-seen{color:var(--text-muted); font-size:12px;}
+
+  .banner{
+    background:var(--surface-2); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:4px; padding:10px 12px; font-size:13px; margin-bottom:16px; color:var(--text-muted);
+  }
+  .hidden{display:none !important;}
+
+  .ghost-link{background:none; border:none; color:var(--text-muted); font-size:11.5px; cursor:pointer; padding:4px 2px; text-decoration:underline; text-underline-offset:2px; font-family:var(--font-ui); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+  .ghost-link:hover{color:var(--accent);}
+
+  .modal-wide{max-width:460px;}
+  .identity-grid{display:flex; flex-direction:column; gap:10px;}
+  .couple-group{border:1px solid var(--border); border-radius:5px; padding:10px;}
+  .couple-label{font-size:10.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; font-weight:600; font-family:var(--font-ui);}
+  .couple-pair{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .person-btn{display:flex; align-items:center; gap:8px; padding:10px; border-radius:5px; border:1px solid var(--border); background:var(--surface-2); cursor:pointer; font-weight:600; font-size:13.5px; color:var(--text); font-family:var(--font-head);}
+  .person-btn:hover{border-color:var(--accent); background:var(--surface);}
+
+  .payer-grid,.split-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px;}
+  .payer-btn,.split-btn{
+    display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:5px;
+    border:1px solid var(--border); background:var(--surface-2); cursor:pointer;
+    font-weight:600; font-size:13px; color:var(--text-muted); text-align:left; font-family:var(--font-head);
+  }
+  .payer-btn:hover,.split-btn:hover{border-color:var(--accent);}
+  .payer-btn.selected{border-color:var(--accent); background:var(--surface); color:var(--text); box-shadow:0 0 0 1px var(--accent);}
+  .split-btn.selected{border-color:var(--good); background:var(--good-bg); color:var(--good);}
+
+  .split-value-list{margin-top:8px; border:1px solid var(--border); border-radius:5px; padding:2px 10px;}
+  .split-value-row{display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border);}
+  .split-value-row:last-child{border-bottom:none;}
+  .split-value-row .avatar{flex:none;}
+  .split-value-name{flex:1; font-size:13px; font-weight:600; min-width:0;}
+  .split-value-row input{width:74px; flex:none; text-align:right;}
+  .split-value-suffix{color:var(--text-muted); font-size:12px; flex:none; width:36px;}
+
+  .day-card{padding:0; border-left:3px solid var(--accent); overflow:hidden; margin-bottom:22px;}
+  .day-head{display:flex; align-items:center; gap:10px; padding:14px 16px;}
+  .day-title-wrap{flex:1; min-width:0;}
+  .day-title{font-family:var(--font-head); font-weight:700; font-size:17px;}
+  .day-subtitle{color:var(--text-muted); font-size:12px; margin-top:1px; font-style:italic;}
+  .moments-list{border-top:1px solid var(--border);}
+  .moment-row{display:flex; align-items:flex-start; gap:12px; padding:10px 16px; border-bottom:1px solid var(--border);}
+  .moment-row:last-child{border-bottom:none;}
+  .moment-time{
+    flex:none; min-width:74px; text-align:center; font-size:10px; font-weight:700; font-family:var(--font-mono);
+    text-transform:uppercase; letter-spacing:.04em;
+    color:var(--text-muted); background:var(--surface-2); border-radius:999px; padding:5px 8px;
+  }
+  .moment-body{flex:1; min-width:0;}
+  .moment-title{font-weight:600; font-size:14px; font-family:var(--font-head); line-height:1.5;}
+  .moment-status-tag{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-top:3px; font-family:var(--font-ui);}
+  .day-card .ghost-btn{
+    border:none; border-top:1px solid var(--border); border-radius:0; margin:0; width:100%;
+    color:var(--accent); font-weight:700; background:var(--surface-2);
+  }
+  .day-card .ghost-btn:hover{background:var(--surface); color:var(--accent);}
+
+  .cal-card{padding:14px 16px;}
+  .cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .cal-month-title{font-family:var(--font-head); font-weight:700; font-size:13px; text-align:center; margin-bottom:6px; color:var(--text-muted); font-style:italic;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px;}
+  .cal-weekday{text-align:center; font-size:9.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; padding-bottom:3px; font-family:var(--font-ui); font-weight:600;}
+  .cal-day{
+    aspect-ratio:1; border:1px solid transparent; background:var(--surface-2); border-radius:4px; cursor:pointer;
+    font-size:12px; color:var(--text); font-family:var(--font-mono);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:2px;
+  }
+  .cal-day:hover{border-color:var(--accent);}
+  .cal-day.empty-slot{background:none; border:none; padding:0; cursor:default; pointer-events:none;}
+  .cal-day.pending-start{background:var(--accent); color:var(--accent-ink); font-weight:700;}
+
+  .bg-watermark{
+    position:fixed; left:0; right:0; bottom:0; width:100%; height:42vh; min-height:260px;
+    z-index:0; pointer-events:none; opacity:.5;
+  }
+  .bg-watermark svg{width:100%; height:100%; display:block;}
+
+  .hero-banner{width:100%; height:150px; overflow:hidden; display:block; border-bottom:1px solid var(--border); position:relative; z-index:1;}
+  .hero-banner svg{width:100%; height:100%; display:block;}
+  @media (max-width:600px){.hero-banner{height:108px;}}
+
+  .password-gate{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(20,15,8,.65);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .password-gate.hidden{display:none;}
+  .password-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:32px 26px;
+    width:100%; max-width:340px; text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+  }
+  .password-mark{font-size:34px; margin-bottom:6px;}
+  .password-card h2{font-size:26px; margin-bottom:6px; font-style:italic;}
+  .password-card p{color:var(--text-muted); font-size:13.5px; margin:0 0 18px; font-style:italic;}
+  .password-card input{margin-bottom:12px; text-align:center;}
+  .password-card .btn{width:100%;}
+  .gate-error{color:var(--bad); font-size:12.5px; margin-top:12px;}
+</style>
+</head>
+<body>
+<script>
+  (function(){
+    try {
+      var saved = localStorage.getItem("scotland2026_theme");
+      if (saved) document.documentElement.setAttribute("data-theme", saved);
+    } catch(e){}
+  })();
+</script>
+
+<div id="password-gate" class="password-gate">
+  <div class="password-card">
+    <div class="password-mark">🏰</div>
+    <h2>Scotland 2026</h2>
+    <p>This one's private — enter the password to get in.</p>
+    <input type="password" id="gate-input" placeholder="Password" autocomplete="off">
+    <button class="btn" id="gate-submit">Enter</button>
+    <div class="gate-error hidden" id="gate-error">Not quite — try again.</div>
+  </div>
+</div>
+
+<div class="bg-watermark" aria-hidden="true">
+  <svg viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+    <path d="M0,300 C120,230 240,265 360,220 C480,175 600,240 720,200 C760,186 780,195 800,190 L800,300 Z" fill="var(--hill-back)"/>
+    <path d="M0,300 C140,250 280,280 420,245 C540,215 660,260 800,230 L800,300 Z" fill="var(--hill-mid)" opacity="0.7"/>
+  </svg>
+</div>
+
+<div class="hero-banner" aria-hidden="true">
+  <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="heroSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--sky-top)"/>
+        <stop offset="100%" stop-color="var(--sky-bottom)"/>
+      </linearGradient>
+      <filter id="sunGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="9"/>
+      </filter>
+    </defs>
+    <rect width="1200" height="220" fill="url(#heroSky)"/>
+    <circle cx="1010" cy="55" r="32" fill="var(--sky-sun)" filter="url(#sunGlow)" opacity="0.55"/>
+    <circle cx="1010" cy="55" r="20" fill="var(--sky-sun)"/>
+    <path d="M0,150 C150,110 300,130 450,100 C600,70 750,112 900,90 C1050,70 1150,100 1200,90 L1200,220 L0,220 Z" fill="var(--hill-back)" opacity="0.65"/>
+    <path d="M0,180 C180,140 320,168 480,135 C650,102 800,150 950,120 C1080,100 1150,130 1200,120 L1200,220 L0,220 Z" fill="var(--hill-mid)" opacity="0.85"/>
+    <path d="M0,205 C160,168 300,192 460,162 C620,132 760,178 920,152 C1060,130 1140,155 1200,150 L1200,220 L0,220 Z" fill="var(--hill-front)"/>
+    <path d="M0,206 C200,196 400,212 600,200 C800,190 1000,207 1200,198 L1200,220 L0,220 Z" fill="var(--loch)"/>
+    <path d="M90,210 Q220,205 350,210" stroke="var(--sky-top)" stroke-width="1.5" fill="none" opacity="0.35"/>
+    <path d="M650,208 Q800,203 950,209" stroke="var(--sky-top)" stroke-width="1.5" fill="none" opacity="0.35"/>
+  </svg>
+</div>
+
+<div class="topbar">
+  <div class="brand">
+    <svg class="mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M2 26 Q16 6 30 26 Z" fill="var(--accent)"/>
+    </svg>
+    <div>
+      <h1 id="trip-name">Scotland 2026</h1>
+      <div class="sub" id="trip-sub">Group planner</div>
+    </div>
+  </div>
+  <div class="scotland-clock" title="Current time in Scotland">
+    <div class="scotland-clock-label">Scotland Time</div>
+    <div class="scotland-clock-time" id="edinburgh-clock">--:--</div>
+  </div>
+  <div class="topbar-right">
+    <button class="ghost-link" id="activity-open" title="View activity log">📜 Activity</button>
+    <button class="ghost-link" id="feature-open" title="Request or view feature requests">💡 Ideas</button>
+    <button class="iconbtn" id="theme-toggle" title="Toggle theme">◐</button>
+    <div class="chip" id="identity-chip"><span class="avatar" id="identity-avatar">?</span><span id="identity-name">Pick your name</span></div>
+  </div>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="overview" class="active" draggable="true" title="Drag to reorder tabs">🏔️ Overview</button>
+  <button data-tab="lodging" draggable="true" title="Drag to reorder tabs">🏠 Lodging</button>
+  <button data-tab="flights" draggable="true" title="Drag to reorder tabs">✈️ Flights</button>
+  <button data-tab="itinerary" draggable="true" title="Drag to reorder tabs">🗒️ Itinerary</button>
+  <button data-tab="budget" draggable="true" title="Drag to reorder tabs">💸 Expenses</button>
+</nav>
+
+<main>
+  <div id="sync-banner" class="banner hidden"></div>
+  <div class="panel active" id="panel-overview"><div class="empty">Loading trip data…</div></div>
+  <div class="panel" id="panel-lodging"></div>
+  <div class="panel" id="panel-flights"></div>
+  <div class="panel" id="panel-itinerary"></div>
+  <div class="panel" id="panel-budget"></div>
+</main>
+
+
+<div id="presence-widget" class="presence-widget hidden" title="Who's got this open right now"></div>
+
+<button id="chat-fab" class="chat-fab" title="Trip chat">💬<span id="chat-badge" class="chat-badge hidden"></span></button>
+<div id="chat-panel" class="chat-panel hidden">
+  <div class="chat-resize-handle" id="chat-resize-handle" title="Drag to resize"></div>
+  <div class="chat-head">
+    <span>💬 Trip Chat</span>
+    <button class="icon-only" id="chat-minimize" title="Minimize">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Say something to the crew...">
+    <button class="btn small" id="chat-send">Send</button>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var ROSTER = [
+    { id:"tj", name:"Tj", coupleId:"c1", tag:"Tj", color:"#e0554f" },
+    { id:"emma", name:"Emma", coupleId:"c1", tag:"EZ", color:"#d9678a" },
+    { id:"henry", name:"Henry", coupleId:"c2", tag:"HC", color:"#3f8ae0" },
+    { id:"morgan", name:"Morgan", coupleId:"c2", tag:"MF", color:"#3aa6a6" },
+    { id:"travis", name:"Travis", coupleId:"c3", tag:"TC", color:"#7a9b3f" },
+    { id:"sabrina", name:"Sabrina", coupleId:"c3", tag:"SB", color:"#9b6fd1" }
+  ];
+  var COUPLES = [
+    { id:"c1", label:"Tj & Emma" },
+    { id:"c2", label:"Henry & Morgan" },
+    { id:"c3", label:"Travis & Sabrina" }
+  ];
+
+  var DEFAULT_STATE = {
+    schemaVersion: 2,
+    trip: { name: "Scotland 2026", startDate: "2026-09-12", endDate: "2026-09-22" },
+    participants: ROSTER.map(function(r){
+      return { id:r.id, name:r.name, coupleId:r.coupleId, tag:r.tag, color:r.color, lastSeenTs: null };
+    }),
+    lodging: [],
+    flights: [
+      { id:"flight-1", direction:"departing", flight:"DL 1411", from:"AUS", to:"JFK", date:"2026-09-12", duration:"3h 46m", time:"07:30", timeZone:"CDT", landTime:"12:16", landTimeZone:"EDT", notes:"", people:["tj","emma","henry","morgan"] },
+      { id:"flight-2", direction:"departing", flight:"DL 0208", from:"JFK", to:"EDI", date:"2026-09-13", duration:"6h 55m", time:"21:25", timeZone:"EDT", landTime:"09:20", landTimeZone:"BST", notes:"", people:["tj","emma","henry","morgan"] },
+      { id:"flight-3", direction:"departing", flight:"AA 2292", from:"AUS", to:"JFK", date:"2026-09-12", duration:"3h 53m", time:"06:07", timeZone:"CDT", landTime:"11:00", landTimeZone:"EDT", notes:"", people:["travis","sabrina"] },
+      { id:"flight-4", direction:"departing", flight:"KL 646", from:"JFK", to:"AMS", date:"2026-09-13", duration:"7h 7m", time:"19:10", timeZone:"EDT", landTime:"08:17", landTimeZone:"CEST", notes:"", people:["travis","sabrina"] },
+      { id:"flight-5", direction:"departing", flight:"KL 927", from:"AMS", to:"EDI", date:"2026-09-14", duration:"1h 25m", time:"11:55", timeZone:"CEST", landTime:"12:20", landTimeZone:"BST", notes:"", people:["travis","sabrina"] },
+      { id:"flight-6", direction:"returning", flight:"AA 279", from:"EDI", to:"PHI", date:"2026-09-22", duration:"7h 20m", time:"11:25", timeZone:"BST", landTime:"13:45", landTimeZone:"EDT", notes:"", people:["tj","emma"] },
+      { id:"flight-7", direction:"returning", flight:"AA 1314", from:"PHI", to:"AUS", date:"2026-09-22", duration:"3h 51m", time:"17:35", timeZone:"EDT", landTime:"20:26", landTimeZone:"CDT", notes:"", people:["tj","emma"] },
+      { id:"flight-8", direction:"returning", flight:"DL 0209", from:"EDI", to:"JFK", date:"2026-09-22", duration:"7h 40m", time:"14:05", timeZone:"BST", landTime:"16:45", landTimeZone:"EDT", notes:"", people:["henry","morgan"] },
+      { id:"flight-9", direction:"returning", flight:"DL 1233", from:"JFK", to:"AUS", date:"2026-09-22", duration:"4h 20m", time:"19:50", timeZone:"EDT", landTime:"23:10", landTimeZone:"CDT", notes:"", people:["henry","morgan"] },
+      { id:"flight-10", direction:"returning", flight:"UA 979", from:"EDI", to:"IAD", date:"2026-09-22", duration:"8h 5m", time:"12:30", timeZone:"BST", landTime:"15:35", landTimeZone:"EDT", notes:"", people:["travis","sabrina"] },
+      { id:"flight-11", direction:"returning", flight:"UA 2337", from:"IAD", to:"AUS", date:"2026-09-22", duration:"3h 34m", time:"18:00", timeZone:"EDT", landTime:"20:34", landTimeZone:"CDT", notes:"", people:["travis","sabrina"] }
+    ],
+    itinerary: [
+      { id:"day-0912", date:"2026-09-12", label:"", moments: [
+        { id:"mo-0912-1", block:"morning", time:"11:00", location:"NYC", text:"Unit A: Arrive in NYC", notes:"", status:"", people:["travis","sabrina"], comments:[] },
+        { id:"mo-0912-2", block:"afternoon", time:"12:16", location:"JFK", text:"Unit B & C: Arrive", notes:"", status:"", people:["tj","emma","henry","morgan"], comments:[] },
+        { id:"mo-0912-3", block:"evening", time:"20:00", location:"Lyric Theater", text:"The Cursed Child", notes:"", status:"", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] }
+      ]},
+      { id:"day-0913", date:"2026-09-13", label:"", moments: [
+        { id:"mo-0913-1", block:"morning", time:"", location:"", text:"Good Morning Breakfast Truck? Idk these bagel sammies look like they'd make me horny baby yeah", notes:"", status:"", people:[], comments:[] },
+        { id:"mo-0913-2", block:"afternoon", time:"", location:"The Met", text:"The Met", notes:"EZ: I'm probably going to dip early (if Tj will come) and explore the UES", status:"", people:[], comments:[] },
+        { id:"mo-0913-3", block:"evening", time:"19:10", location:"JFK", text:"Unit A: Leave NYC", notes:"", status:"", people:["travis","sabrina"], comments:[] },
+        { id:"moment-mtdsvglkectbq", block:"morning", time:"21:25", location:"JFK", text:"Unit B & C: Leave NYC", notes:"", status:"", people:["tj","emma","henry","morgan"], comments:[] }
+      ]},
+      { id:"day-0914", date:"2026-09-14", label:"", moments: [
+        { id:"mo-0914-1", block:"morning", time:"09:20", location:"EDB", text:"Unit B & C: Arrive", notes:"", status:"", people:["tj","emma","henry","morgan"], comments:[] },
+        { id:"mo-0914-2", block:"afternoon", time:"12:20", location:"EDB", text:"Unit A: Arrive", notes:"", status:"", people:["travis","sabrina"], comments:[] }
+      ]},
+      { id:"day-0915", date:"2026-09-15", label:"", moments: [
+        { id:"mo-0915-1", block:"afternoon", time:"", location:"Edinburgh Castle", text:"Explore Edinburgh Castle & Around", notes:"The Witches Well\nThe Parish Church of St Cuthbert\nPrinces Street Gardens\nEtc.\nArmchair Books\nAND/OR\nNational Museum of Scotland\nAll the studd around there, there's a lot...", status:"", people:[], comments:[] },
+        { id:"mo-0915-2", block:"afternoon", time:"", location:"The Last Drop", text:"Early Dinner", notes:"", status:"", people:[], comments:[] },
+        { id:"mo-0915-3", block:"evening", time:"20:00", location:"The Lost Close", text:"Whiskey Tasting", notes:"", status:"needs", people:[], comments:[] },
+        { id:"mo-0915-4", block:"late", time:"", location:"", text:"Late Night Bars", notes:"Bannerman's Bar\nWhistle Binkies\nCapitan's Bar", status:"", people:[], comments:[] }
+      ]},
+      { id:"day-0916", date:"2026-09-16", label:"", moments: [
+        { id:"mo-0916-1", block:"morning", time:"10:30", location:"Piper's Rest", text:"Brunch", notes:"", status:"", people:[], comments:[] },
+        { id:"mo-0916-2", block:"afternoon", time:"13:32", location:"", text:"Train to Inverness", notes:"Arrives 5:02 PM · ~$78 pp", status:"needs", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] },
+        { id:"mo-0916-3", block:"evening", time:"", location:"", text:"Spooky Night Tour", notes:"Time TBD", status:"confirmed", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] }
+      ]},
+      { id:"day-0917", date:"2026-09-17", label:"", moments: [
+        { id:"mo-0917-1", block:"morning", time:"08:00", location:"", text:"Isle of Skye Tour", notes:"", status:"confirmed", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] }
+      ]},
+      { id:"day-0918", date:"2026-09-18", label:"", moments: [
+        { id:"mo-0918-1", block:"morning", time:"09:42", location:"", text:"Train to Edinburgh", notes:"Arrives 1:14 PM · ~$78 pp", status:"needs", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] },
+        { id:"mo-0918-2", block:"late", time:"21:00", location:"Panda & Son's Speakeasy", text:"Drinks", notes:"", status:"confirmed", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] }
+      ]},
+      { id:"day-0919", date:"2026-09-19", label:"", moments: [
+        { id:"mo-0919-1", block:"morning", time:"11:30", location:"The Elephant House", text:"Coffee & Brunch", notes:"The birthplace of Harry Potter", status:"", people:[], comments:[] },
+        { id:"mo-0919-2", block:"morning", time:"", location:"Museum Context", text:"Shopping", notes:"Harry Potter merchandise retailer", status:"", people:[], comments:[] },
+        { id:"mo-0919-3", block:"afternoon", time:"15:00", location:"", text:"Harry Potter Tour", notes:"Ends 5 PM · ~$22 pp", status:"needs", people:[], comments:[] },
+        { id:"mo-0919-4", block:"evening", time:"20:00", location:"Frankenstein's", text:"Dinner", notes:"(hehe)", status:"confirmed", people:["tj","emma","henry","morgan","travis","sabrina"], comments:[] },
+        { id:"mo-0919-5", block:"late", time:"", location:"The Banshee Labyrinth", text:"The Banshee Labyrinth", notes:"Underground tunnels in a goth club!!!!!!!", status:"", people:[], comments:[] }
+      ]},
+      { id:"day-0920", date:"2026-09-20", label:"", moments: [
+        { id:"mo-0920-1", block:"evening", time:"18:00", location:"", text:"Underground Vaults Tour", notes:"~$36 pp", status:"needs", people:[], comments:[] },
+        { id:"mo-0920-2", block:"late", time:"20:15", location:"Devil's Advocate", text:"Dinner", notes:"Requested resy — an hour after the tour ends", status:"", people:[], comments:[] },
+        { id:"mo-0920-3", block:"late", time:"", location:"Cabaret Voltaire", text:"Cabaret Voltaire", notes:"", status:"", people:[], comments:[] }
+      ]},
+      { id:"day-0921", date:"2026-09-21", label:"", moments: [
+        { id:"mo-0921-1", block:"afternoon", time:"", location:"Circus Lane, New Town", text:"New Town", notes:"", status:"", people:[], comments:[] },
+        { id:"mo-0921-2", block:"evening", time:"", location:"Boston Bar", text:"Dinner", notes:"Or something in the area", status:"", people:[], comments:[] },
+        { id:"mo-0921-3", block:"late", time:"", location:"Bramble", text:"Bramble", notes:"", status:"", people:[], comments:[] }
+      ]},
+      { id:"day-0922", date:"2026-09-22", label:"", moments: [
+        { id:"mo-0922-1", block:"morning", time:"11:25", location:"EDB", text:"Unit B: Leave", notes:"Maybe hehe", status:"", people:["tj","emma"], comments:[] },
+        { id:"mo-0922-2", block:"afternoon", time:"12:30", location:"EDB", text:"Unit A: Leave", notes:"", status:"", people:["travis","sabrina"], comments:[] },
+        { id:"mo-0922-3", block:"evening", time:"20:26", location:"ATX", text:"Unit B: Arrive", notes:"", status:"", people:["tj","emma"], comments:[] },
+        { id:"mo-0922-4", block:"evening", time:"20:34", location:"ATX", text:"Unit A: Arrive", notes:"", status:"", people:["travis","sabrina"], comments:[] },
+        { id:"mo-0922-5", block:"afternoon", time:"14:05", location:"EDB", text:"Unit C: Leave", notes:"", status:"", people:["henry","morgan"], comments:[] },
+        { id:"mo-0922-6", block:"evening", time:"23:10", location:"ATX", text:"Unit C: Arrive", notes:"", status:"", people:["henry","morgan"], comments:[] }
+      ]}
+    ],
+    expenses: [],
+    featureRequests: [],
+    chat: [],
+    settlementLog: [],
+    activity: []
+  };
+
+  function migrateState(loaded){
+    if (!loaded) return null;
+    if (loaded.schemaVersion === 2) return loaded;
+    var idMap = {};
+    var participants = ROSTER.map(function(r){
+      return { id:r.id, name:r.name, coupleId:r.coupleId, tag:r.tag, color:r.color, lastSeenTs:null };
+    });
+    (loaded.participants || []).forEach(function(old){
+      var match = ROSTER.find(function(r){ return r.name.toLowerCase() === (old.name || "").toLowerCase(); });
+      if (match){
+        idMap[old.id] = match.id;
+        var np = participants.find(function(p){ return p.id === match.id; });
+        np.lastSeenTs = old.lastSeenTs || null;
+      }
+    });
+    function remapVotes(list){
+      (list || []).forEach(function(item){
+        item.votes = (item.votes || []).map(function(oid){ return idMap[oid]; }).filter(Boolean);
+      });
+      return list || [];
+    }
+    var expenses = (loaded.expenses || []).filter(function(e){ return idMap[e.paidBy]; }).map(function(e){
+      return {
+        id: e.id, description: e.description, amountCents: e.amountCents,
+        paidBy: idMap[e.paidBy],
+        splitAmong: (e.splitAmong || []).map(function(id){ return idMap[id]; }).filter(Boolean),
+        ts: e.ts
+      };
+    });
+    return {
+      schemaVersion: 2,
+      trip: loaded.trip || DEFAULT_STATE.trip,
+      participants: participants,
+      lodging: remapVotes(loaded.lodging),
+      flights: [],
+      itinerary: [],
+      expenses: expenses,
+      activity: loaded.activity || []
+    };
+  }
+
+  var state = null;
+
+  function uid(prefix){
+    return prefix + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  }
+
+  // ---------- persistence (Firebase Realtime Database) ----------
+  // Shares the ski trip's Firebase project, but lives under its own
+  // /scotland2026 node so nothing here ever reads or writes the ski
+  // trip's /state or /presence data. One shared JSON blob at
+  // /scotland2026/state. A live listener keeps every open tab in sync in
+  // real time — no reload needed. `dirty` guards against an incoming
+  // remote snapshot clobbering an edit we haven't flushed to the server yet.
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyDGpfYn1-YMV6jkJn9nDgvk1_yrYydem0U",
+    authDomain: "ski-trip-2027.firebaseapp.com",
+    databaseURL: "https://ski-trip-2027-default-rtdb.firebaseio.com",
+    projectId: "ski-trip-2027",
+    storageBucket: "ski-trip-2027.firebasestorage.app",
+    messagingSenderId: "248692108351",
+    appId: "1:248692108351:web:f65f4b12bbf0987b6bdc8a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+  var stateRef = db.ref("scotland2026/state");
+
+  var dirty = false;
+  var stateLoaded = false;
+
+  function startSync(){
+    stateRef.on("value", function(snapshot){
+      if (dirty) return; // an unsaved local edit is about to overwrite this anyway
+      var incoming = snapshot.val();
+      state = migrateState(incoming) || (state || JSON.parse(JSON.stringify(DEFAULT_STATE)));
+      backfillState();
+      hideBanner();
+      renderAll();
+      if (!stateLoaded){
+        stateLoaded = true;
+        if (!me() && !isGuest()){
+          if (hasSeenWelcome()) promptIdentity(false); else openWelcomeModal();
+        }
+      }
+    }, function(){
+      if (!state){
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        backfillState();
+        renderAll();
+      }
+      showBanner("Can't reach the shared database right now — changes won't save until this reconnects.");
+    });
+  }
+
+  var saveTimer = null;
+  function scheduleSave(){
+    dirty = true;
+    renderAll();
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(flushSave, 450);
+  }
+
+  function flushSave(){
+    saveTimer = null;
+    stateRef.set(state).then(function(){
+      dirty = false;
+      hideBanner();
+    }).catch(function(){
+      showBanner("Couldn't save that change — retrying…");
+      saveTimer = setTimeout(flushSave, 1800);
+    });
+  }
+
+  function showBanner(msg){
+    var b = document.getElementById("sync-banner");
+    b.textContent = msg;
+    b.classList.remove("hidden");
+  }
+  function hideBanner(){
+    document.getElementById("sync-banner").classList.add("hidden");
+  }
+
+  // ---------- identity ----------
+
+  var LS_KEY = "scotland2026_participant_id";
+  var GUEST_KEY = "scotland2026_guest";
+  var WELCOME_KEY = "scotland2026_welcomed";
+
+  function hasSeenWelcome(){
+    try { return localStorage.getItem(WELCOME_KEY) === "1"; } catch(e){ return false; }
+  }
+  function markWelcomeSeen(){
+    try { localStorage.setItem(WELCOME_KEY, "1"); } catch(e){}
+  }
+
+  var MATH_HELP_KEY = "scotland2026_seen_math_help";
+  function hasSeenMathHelp(){
+    try { return localStorage.getItem(MATH_HELP_KEY) === "1"; } catch(e){ return false; }
+  }
+  function markMathHelpSeen(){
+    try { localStorage.setItem(MATH_HELP_KEY, "1"); } catch(e){}
+  }
+
+  function myId(){ return localStorage.getItem(LS_KEY); }
+  function me(){
+    if (!state) return null;
+    var id = myId();
+    return state.participants.find(function(p){ return p.id === id; }) || null;
+  }
+  function setMyId(id){ localStorage.setItem(LS_KEY, id); }
+  function isGuest(){
+    try { return localStorage.getItem(GUEST_KEY) === "1"; } catch(e){ return false; }
+  }
+  function setGuest(){
+    try {
+      localStorage.setItem(GUEST_KEY, "1");
+      localStorage.removeItem(LS_KEY);
+    } catch(e){}
+  }
+  function clearGuest(){
+    try { localStorage.removeItem(GUEST_KEY); } catch(e){}
+  }
+
+  var GUEST_SESSION_KEY = "scotland2026_guest_session_id";
+  function guestSessionId(){
+    try {
+      var id = localStorage.getItem(GUEST_SESSION_KEY);
+      if (!id){ id = uid("guest"); localStorage.setItem(GUEST_SESSION_KEY, id); }
+      return id;
+    } catch(e){ return "guest-anon"; }
+  }
+  function blockIfGuest(){
+    if (!isGuest()) return false;
+    showBanner("You're viewing as a guest — pick your name (top right) to make changes.");
+    return true;
+  }
+
+  function initials(name){
+    var parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+
+  function logActivity(text, type){
+    var m = me();
+    if (m) m.lastSeenTs = Date.now();
+    state.activity.unshift({
+      id: uid("act"),
+      ts: Date.now(),
+      who: m ? m.name : "Someone",
+      text: text,
+      type: type || "default"
+    });
+    if (state.activity.length > 200) state.activity.length = 200;
+  }
+
+  function relTime(ts){
+    var diff = Date.now() - ts;
+    if (diff < 60000) return "just now";
+    var mins = Math.floor(diff / 60000);
+    if (mins < 60) return mins + "m ago";
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    var days = Math.floor(hrs / 24);
+    if (days < 7) return days + "d ago";
+    return new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function participantTag(id){
+    var p = state.participants.find(function(x){ return x.id === id; });
+    return p && p.tag ? p.tag : initials(participantName(id));
+  }
+
+  function participantColor(id){
+    var p = state.participants.find(function(x){ return x.id === id; });
+    return p && p.color ? p.color : "var(--accent)";
+  }
+
+  var WELCOME_PAGES = [
+    {
+      emoji: "🏰",
+      title: "Welcome to the Scotland Trip Planner",
+      body: "This replaces the group chat scavenger hunt. Lodging, flights, and the itinerary all live here in one place — no more digging through texts for that Airbnb link."
+    },
+    {
+      emoji: "💬",
+      title: "Talk it out in Trip Chat",
+      body: "Skip the group text — hit the chat bubble in the bottom-right corner any time to message the whole crew right here in the planner."
+    },
+    {
+      emoji: "💸",
+      title: "Track what everyone spends",
+      body: "Use the Expenses tab to log who paid for what. It splits costs evenly and tells you exactly who owes who by the end of the trip."
+    },
+    {
+      emoji: "💡",
+      title: "Help make it less janky",
+      body: "Got an idea? Drop it in the Ideas tab and upvote the ones you like — that's how this thing gets better."
+    }
+  ];
+
+  function openWelcomeModal(){
+    var root = document.getElementById("modal-root");
+    var step = 0;
+
+    function finish(){
+      markWelcomeSeen();
+      root.innerHTML = "";
+      promptIdentity(false);
+    }
+
+    function paint(){
+      var page = WELCOME_PAGES[step];
+      var isLast = step === WELCOME_PAGES.length - 1;
+      var dots = WELCOME_PAGES.map(function(_, i){
+        return '<span class="welcome-dot' + (i === step ? " active" : "") + '"></span>';
+      }).join("");
+      root.innerHTML =
+        '<div class="modal-backdrop"><div class="modal">' +
+          '<div class="modal-head"><h3>' + page.emoji + ' ' + escapeHtml(page.title) + '</h3><button class="icon-only" id="welcome-close" title="Close">✕</button></div>' +
+          '<p>' + escapeHtml(page.body) + '</p>' +
+          '<div class="welcome-dots">' + dots + '</div>' +
+          '<div class="actions" style="justify-content:space-between;">' +
+            '<button class="ghost-link" id="welcome-skip">Skip</button>' +
+            '<button class="btn" id="welcome-next">' + (isLast ? "Let's go" : "Next") + '</button>' +
+          '</div>' +
+        '</div></div>';
+      document.getElementById("welcome-close").onclick = finish;
+      document.getElementById("welcome-skip").onclick = finish;
+      document.getElementById("welcome-next").onclick = function(){
+        if (isLast){ finish(); } else { step++; paint(); }
+      };
+    }
+
+    paint();
+  }
+
+  function promptIdentity(forceSwitch){
+    var root = document.getElementById("modal-root");
+    var groups = COUPLES.map(function(c){
+      var members = state.participants.filter(function(p){ return p.coupleId === c.id; });
+      var btns = members.map(function(p){
+        return '<button class="person-btn" data-pick="' + p.id + '">' +
+          '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+          '<span>' + escapeHtml(p.name) + '</span>' +
+        '</button>';
+      }).join("");
+      return '<div class="couple-group"><div class="couple-label">' + escapeHtml(c.label) + '</div><div class="couple-pair">' + btns + '</div></div>';
+    }).join("");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<h3>Who\'s this?</h3>' +
+        '<p>Pick your name — this device will remember it.</p>' +
+        '<div class="identity-grid">' + groups + '</div>' +
+        '<button class="ghost-btn" id="identity-guest" style="margin-top:12px;">👀 Just looking — continue as a guest (view only)</button>' +
+        (forceSwitch ? '<div class="actions"><button class="btn secondary" id="identity-cancel">Cancel</button></div>' : '') +
+      '</div></div>';
+
+    Array.prototype.slice.call(root.querySelectorAll("[data-pick]")).forEach(function(btn){
+      btn.onclick = function(){ selectIdentity(btn.dataset.pick); };
+    });
+    document.getElementById("identity-guest").onclick = function(){ continueAsGuest(); };
+    var cancelBtn = document.getElementById("identity-cancel");
+    if (cancelBtn) cancelBtn.onclick = function(){ root.innerHTML = ""; };
+  }
+
+  function selectIdentity(id){
+    var p = state.participants.find(function(x){ return x.id === id; });
+    if (!p) return;
+    var oldMe = me();
+    if (oldMe) db.ref("scotland2026/presence/" + oldMe.id).remove();
+    if (isGuest()) db.ref("scotland2026/presence/" + guestSessionId()).remove();
+    clearGuest();
+    setMyId(id);
+    document.getElementById("modal-root").innerHTML = "";
+    logActivity("checked in", "join");
+    scheduleSave();
+    registerPresence();
+  }
+
+  function continueAsGuest(){
+    var oldMe = me();
+    if (oldMe) db.ref("scotland2026/presence/" + oldMe.id).remove();
+    setGuest();
+    document.getElementById("modal-root").innerHTML = "";
+    renderAll();
+    registerPresence();
+  }
+
+  // ---------- voting ----------
+
+
+  // ---------- lodging ----------
+
+  var LODGING_SECTIONS = ["nyc", "edinburgh1", "inverness", "edinburgh2"];
+  var LODGING_SECTION_LABELS = { nyc: "NYC", edinburgh1: "Edinburgh (First Half)", inverness: "Inverness", edinburgh2: "Edinburgh (Second Half)" };
+
+  function lodgingInSection(section){
+    return state.lodging.filter(function(l){ return l.section === section; });
+  }
+
+  function renderLodgingCard(item){
+    var hasPhoto = !!item.url;
+    var photoHtml = hasPhoto
+      ? '<a href="' + escapeAttr(item.url) + '" target="_blank" rel="noopener"><img class="lodging-photo" src="' + escapeAttr(linkPreviewImg(item.url)) + '" alt="" loading="lazy" onerror="this.remove()"></a>'
+      : "";
+    var bookedHtml = item.bookedBy
+      ? '<span class="lodging-status lodging-status-good">✓ Booked by ' + escapeHtml(participantName(item.bookedBy)) + '</span>'
+      : '<span class="lodging-status lodging-status-pending">Not booked yet</span>';
+    var paidHtml = item.bookedBy
+      ? (item.paid
+          ? '<span class="lodging-status lodging-status-good">✓ Paid up</span>'
+          : '<span class="lodging-status lodging-status-pending">Not paid yet</span>')
+      : "";
+    var priceHtml = item.priceCents ? '<div class="mono" style="font-size:14px;font-weight:600;margin-top:4px;">' + fmtCents(item.priceCents) + ' <span style="color:var(--text-muted);font-weight:400;font-size:12px;">per person</span></div>' : "";
+    var nameHtml = item.url
+      ? '<a href="' + escapeAttr(item.url) + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">' + escapeHtml(item.name) + '</a>'
+      : escapeHtml(item.name);
+    var people = item.people || [];
+    var avatarsHtml = people.length
+      ? '<div class="avatars" style="margin-top:8px;">' + people.map(function(pid){
+          return '<span class="avatar" data-tip="' + escapeAttr(participantName(pid)) + '" style="background:' + participantColor(pid) + '">' + escapeHtml(participantTag(pid)) + '</span>';
+        }).join("") + '</div>'
+      : "";
+    return '<div class="card' + (hasPhoto ? " has-photo" : "") + '">' +
+      photoHtml +
+      '<div class="card-body">' +
+        '<div class="name">' + nameHtml + '</div>' +
+        priceHtml +
+        '<div class="lodging-status-row">' + bookedHtml + paidHtml + '</div>' +
+        (item.notes ? '<div class="meta">' + escapeHtml(item.notes) + '</div>' : '') +
+        avatarsHtml +
+        '<div class="row-actions" style="margin-top:8px;">' +
+          '<button class="icon-only" data-edit-lodging="' + item.id + '" title="Edit">✎</button>' +
+          '<button class="icon-only" data-del-lodging="' + item.id + '" title="Remove">✕</button>' +
+        '</div>' +
+        '<div class="comment-zone">' + renderComments(item) + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderLodgingSection(section){
+    var items = lodgingInSection(section);
+    var label = LODGING_SECTION_LABELS[section];
+    var html = '<div class="section-head" style="margin-top:4px;"><div><h3 style="font-family:var(--font-head);font-size:16px;">' + label + '</h3></div><button class="btn" data-add-lodging="' + section + '">+ Add lodging</button></div>';
+    if (!items.length){
+      html += '<div class="empty">No lodging options yet for ' + label + '.</div>';
+    } else {
+      items.forEach(function(item){ html += renderLodgingCard(item); });
+    }
+    return html;
+  }
+
+  function renderLodging(){
+    var html = '<div class="section-head"><div><h2>Lodging</h2><p>Where we\'re staying, leg by leg.</p></div></div>';
+    LODGING_SECTIONS.forEach(function(section){ html += renderLodgingSection(section); });
+    document.getElementById("panel-lodging").innerHTML = html;
+  }
+
+  function lodgingSectionOptionsHtml(selected){
+    return LODGING_SECTIONS.map(function(s){
+      return '<option value="' + s + '"' + (s === selected ? " selected" : "") + '>' + LODGING_SECTION_LABELS[s] + '</option>';
+    }).join("");
+  }
+
+  function lodgingBookedByOptionsHtml(selected){
+    var html = '<option value=""' + (!selected ? " selected" : "") + '>Not booked yet</option>';
+    html += state.participants.map(function(p){
+      return '<option value="' + p.id + '"' + (p.id === selected ? " selected" : "") + '>' + escapeHtml(p.name) + '</option>';
+    }).join("");
+    return html;
+  }
+
+  function openLodgingModal(existingId, presetSection){
+    if (blockIfGuest()) return;
+    var existing = existingId ? state.lodging.find(function(l){ return l.id === existingId; }) : null;
+    var root = document.getElementById("modal-root");
+    var priceVal = existing && existing.priceCents ? (existing.priceCents / 100).toFixed(2) : "";
+    var peopleGridHtml = state.participants.map(function(p){
+      var checked = existing ? (existing.people || []).indexOf(p.id) !== -1 : false;
+      return '<button type="button" class="split-btn' + (checked ? ' selected' : '') + '" data-lodging-person="' + p.id + '">' +
+        '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+        '<span>' + escapeHtml(p.name) + '</span>' +
+      '</button>';
+    }).join("");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal">' +
+        '<h3>' + (existing ? "Edit" : "Add") + ' lodging</h3>' +
+        '<div class="field"><label>Leg of the trip</label><select id="lg-section">' + lodgingSectionOptionsHtml(existing ? existing.section : (presetSection || "nyc")) + '</select></div>' +
+        '<div class="field"><label>Name</label><input type="text" id="lg-name" value="' + escapeAttr(existing ? existing.name || "" : "") + '" placeholder="e.g. Old Town flat"></div>' +
+        '<div class="field"><label>Listing link</label><input type="url" id="lg-url" value="' + escapeAttr(existing ? existing.url || "" : "") + '"></div>' +
+        '<div class="grid2">' +
+          '<div class="field"><label>Price per person</label><input type="text" id="lg-price" value="' + escapeAttr(priceVal) + '" placeholder="e.g. 120"></div>' +
+          '<div class="field"><label>Booked by</label><select id="lg-booked-by">' + lodgingBookedByOptionsHtml(existing ? existing.bookedBy : "") + '</select></div>' +
+        '</div>' +
+        '<div class="field"><label>Paid up?</label><select id="lg-paid">' +
+          '<option value="0"' + (!(existing && existing.paid) ? " selected" : "") + '>Not paid yet</option>' +
+          '<option value="1"' + (existing && existing.paid ? " selected" : "") + '>Paid up</option>' +
+        '</select></div>' +
+        '<div class="field"><label>Notes</label><input type="text" id="lg-notes" value="' + escapeAttr(existing ? existing.notes || "" : "") + '" placeholder="bedrooms, distance to town center, etc."></div>' +
+        '<div class="field"><label>Who\'s staying here?</label><div class="split-grid" id="lg-people-grid">' + peopleGridHtml + '</div></div>' +
+        '<div class="actions">' +
+          '<button class="btn secondary" id="lg-cancel">Cancel</button>' +
+          '<button class="btn" id="lg-save">Save</button>' +
+        '</div>' +
+      '</div></div>';
+    document.getElementById("lg-cancel").onclick = function(){ root.innerHTML = ""; };
+    Array.prototype.slice.call(document.getElementById("lg-people-grid").querySelectorAll("[data-lodging-person]")).forEach(function(btn){
+      btn.onclick = function(){ btn.classList.toggle("selected"); };
+    });
+    document.getElementById("lg-save").onclick = function(){
+      var section = document.getElementById("lg-section").value;
+      var name = document.getElementById("lg-name").value.trim();
+      var url = document.getElementById("lg-url").value.trim();
+      var priceCents = dollarsToCents(document.getElementById("lg-price").value);
+      var bookedBy = document.getElementById("lg-booked-by").value;
+      var paid = document.getElementById("lg-paid").value === "1";
+      var notes = document.getElementById("lg-notes").value.trim();
+      var people = Array.prototype.slice.call(root.querySelectorAll("[data-lodging-person]"))
+        .filter(function(b){ return b.classList.contains("selected"); })
+        .map(function(b){ return b.dataset.lodgingPerson; });
+      if (!name) return;
+      if (existing){
+        existing.section = section; existing.name = name; existing.url = url;
+        existing.priceCents = priceCents; existing.bookedBy = bookedBy; existing.paid = paid; existing.notes = notes; existing.people = people;
+        logActivity('edited "' + name + '" in lodging');
+      } else {
+        state.lodging.push({ id: uid("lodging"), section: section, name: name, url: url, priceCents: priceCents, bookedBy: bookedBy, paid: paid, notes: notes, people: people, comments: [] });
+        logActivity('added "' + name + '" to lodging', "join");
+      }
+      root.innerHTML = "";
+      scheduleSave();
+    };
+  }
+
+  function deleteLodgingItem(id){
+    if (blockIfGuest()) return;
+    var idx = state.lodging.findIndex(function(l){ return l.id === id; });
+    if (idx === -1) return;
+    var name = state.lodging[idx].name;
+    state.lodging.splice(idx, 1);
+    logActivity('removed "' + name + '" from lodging', "remove");
+    scheduleSave();
+  }
+
+  // ---------- budget ----------
+
+  function dollarsToCents(str){
+    var n = parseFloat(str);
+    if (isNaN(n)) return 0;
+    return Math.round(n * 100);
+  }
+  function fmtCents(c){
+    var neg = c < 0;
+    c = Math.abs(c);
+    var s = (c/100).toFixed(2);
+    return (neg ? "-$" : "$") + s;
+  }
+
+  var CATEGORIES = [
+    { key: "Lodging", emoji: "🏠", label: "Lodging" },
+    { key: "Food", emoji: "🍔", label: "Food" },
+    { key: "Gear", emoji: "🎒", label: "Gear" },
+    { key: "Transport", emoji: "🚗", label: "Transport" },
+    { key: "Fun", emoji: "🎉", label: "Fun" },
+    { key: "Other", emoji: "📦", label: "Other" }
+  ];
+  function categoryMeta(key){
+    return CATEGORIES.filter(function(c){ return c.key === key; })[0] || CATEGORIES[CATEGORIES.length - 1];
+  }
+
+  // Given {amountCents, splitAmong, splitMode, splitValues}, returns {personId: portionCents}
+  // for everyone in splitAmong. Portions always sum to exactly amountCents regardless of mode,
+  // so the "balances net to zero" invariant holds no matter how the split is sliced.
+  function computeExpensePortions(e){
+    var ids = e.splitAmong || [];
+    var n = ids.length;
+    var portions = {};
+    if (!n) return portions;
+    var mode = e.splitMode || "equal";
+    var amount = e.amountCents;
+    var vals = e.splitValues || {};
+    if (mode === "exact"){
+      ids.forEach(function(id){ portions[id] = Math.round(vals[id] || 0); });
+    } else if (mode === "percent" || mode === "shares"){
+      var weightOf = mode === "percent"
+        ? function(id){ return vals[id] || 0; }
+        : function(id){ return vals[id] != null ? vals[id] : 1; };
+      var totalWeight = ids.reduce(function(s, id){ return s + weightOf(id); }, 0) || n;
+      var running = 0;
+      ids.forEach(function(id, i){
+        if (i === ids.length - 1){
+          portions[id] = amount - running;
+        } else {
+          var portion = Math.round(amount * weightOf(id) / totalWeight);
+          portions[id] = portion;
+          running += portion;
+        }
+      });
+    } else {
+      var share = Math.floor(amount / n);
+      var remainder = amount - share * n;
+      ids.forEach(function(id, i){ portions[id] = share + (i < remainder ? 1 : 0); });
+    }
+    return portions;
+  }
+
+  function computeBalances(){
+    var bal = {};
+    state.participants.forEach(function(p){ bal[p.id] = 0; });
+    state.expenses.forEach(function(e){
+      if (!(e.paidBy in bal) || !e.splitAmong.length) return;
+      var settled = e.settledBy || [];
+      var portions = computeExpensePortions(e);
+      e.splitAmong.forEach(function(pid){
+        if (pid === e.paidBy) return;
+        if (settled.indexOf(pid) !== -1) return;
+        if (!(pid in bal)) return;
+        var portion = portions[pid] || 0;
+        bal[pid] -= portion;
+        bal[e.paidBy] += portion;
+      });
+    });
+    (state.settlementLog || []).forEach(function(p){
+      if (!(p.from in bal) || !(p.to in bal)) return;
+      bal[p.from] += p.amountCents;
+      bal[p.to] -= p.amountCents;
+    });
+    return bal;
+  }
+
+  function computeSettlements(bal){
+    var creditors = [], debtors = [];
+    Object.keys(bal).forEach(function(id){
+      if (bal[id] > 0) creditors.push({ id:id, amt:bal[id] });
+      else if (bal[id] < 0) debtors.push({ id:id, amt:-bal[id] });
+    });
+    creditors.sort(function(a,b){ return b.amt - a.amt; });
+    debtors.sort(function(a,b){ return b.amt - a.amt; });
+    var settlements = [];
+    var i=0, j=0;
+    while (i < debtors.length && j < creditors.length){
+      var pay = Math.min(debtors[i].amt, creditors[j].amt);
+      if (pay > 0) settlements.push({ from:debtors[i].id, to:creditors[j].id, amount:pay });
+      debtors[i].amt -= pay; creditors[j].amt -= pay;
+      if (debtors[i].amt === 0) i++;
+      if (creditors[j].amt === 0) j++;
+    }
+    return settlements;
+  }
+
+  function participantName(id){
+    var p = state.participants.find(function(x){ return x.id === id; });
+    return p ? p.name : "Unknown";
+  }
+
+  var SPLIT_MODE_LABELS = { equal: "Equal", exact: "Exact $", percent: "Percent %", shares: "Shares" };
+
+  function openExpenseModal(existingId){
+    if (blockIfGuest()) return;
+    var existing = existingId ? state.expenses.find(function(e){ return e.id === existingId; }) : null;
+    var root = document.getElementById("modal-root");
+
+    var payer = existing ? existing.paidBy : myId();
+    var splitAmong = existing ? existing.splitAmong.slice() : state.participants.map(function(p){ return p.id; });
+    var splitMode = existing ? (existing.splitMode || "equal") : "equal";
+    var splitValues = existing ? JSON.parse(JSON.stringify(existing.splitValues || {})) : {};
+    var category = existing ? (existing.category || "Other") : "Other";
+    var descValue = existing ? existing.description : "";
+    var amountValue = existing ? (existing.amountCents / 100).toFixed(2) : "";
+
+    function captureFieldValues(){
+      var d = document.getElementById("exp-desc");
+      var a = document.getElementById("exp-amount");
+      if (d) descValue = d.value;
+      if (a) amountValue = a.value;
+    }
+
+    function currentAmountCents(){
+      var input = document.getElementById("exp-amount");
+      return input ? dollarsToCents(input.value) : 0;
+    }
+
+    function splitFeedbackHtml(){
+      var amt = currentAmountCents();
+      if (splitMode === "exact"){
+        var sum = splitAmong.reduce(function(s, id){ return s + Math.round((splitValues[id] || 0) * 100); }, 0);
+        var remaining = amt - sum;
+        var ok = remaining === 0;
+        return '<div style="font-size:12.5px;font-weight:600;color:' + (ok ? "var(--good)" : "var(--bad)") + ';margin-top:8px;">' +
+          (ok ? "✓ Fully assigned" : (remaining > 0 ? fmtCents(remaining) + " left to assign" : fmtCents(-remaining) + " over the total")) +
+        '</div>';
+      }
+      if (splitMode === "percent"){
+        var sumPct = splitAmong.reduce(function(s, id){ return s + (splitValues[id] || 0); }, 0);
+        var ok2 = Math.round(sumPct * 100) === 10000;
+        return '<div style="font-size:12.5px;font-weight:600;color:' + (ok2 ? "var(--good)" : "var(--bad)") + ';margin-top:8px;">' +
+          sumPct.toFixed(1) + '% assigned' + (ok2 ? " ✓" : " — needs to total 100%") +
+        '</div>';
+      }
+      if (splitMode === "shares"){
+        var portions = computeExpensePortions({ amountCents: amt, splitAmong: splitAmong, splitMode: "shares", splitValues: splitValues });
+        var lines = splitAmong.map(function(id){ return escapeHtml(participantTag(id)) + " " + fmtCents(portions[id] || 0); }).join(" · ");
+        return '<div style="font-size:12.5px;color:var(--text-muted);margin-top:8px;">' + lines + '</div>';
+      }
+      return "";
+    }
+
+    function updateSplitFeedback(){
+      var el = document.getElementById("exp-split-feedback");
+      if (el) el.innerHTML = splitFeedbackHtml();
+    }
+
+    function valueInputsHtml(){
+      if (splitMode === "equal" || !splitAmong.length) return "";
+      var suffix = splitMode === "exact" ? "$" : (splitMode === "percent" ? "%" : "shares");
+      var rows = splitAmong.map(function(id){
+        var p = state.participants.find(function(x){ return x.id === id; });
+        if (!p) return "";
+        var hasVal = splitValues[id] != null;
+        var val = hasVal ? splitValues[id] : (splitMode === "shares" ? 1 : "");
+        return '<div class="split-value-row">' +
+          '<span class="avatar" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+          '<span class="split-value-name">' + escapeHtml(p.name) + '</span>' +
+          '<input type="number" step="any" min="0" data-split-value="' + id + '" value="' + escapeAttr(String(val)) + '" placeholder="' + (splitMode === "shares" ? "1" : "0") + '">' +
+          '<span class="split-value-suffix">' + suffix + '</span>' +
+        '</div>';
+      }).join("");
+      return '<div class="split-value-list">' + rows + '</div><div id="exp-split-feedback"></div>';
+    }
+
+    function paint(){
+      var payerGridHtml = state.participants.map(function(p){
+        return '<button type="button" class="payer-btn' + (p.id === payer ? ' selected' : '') + '" data-payer-pick="' + p.id + '">' +
+          '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+          '<span>' + escapeHtml(p.name) + '</span>' +
+        '</button>';
+      }).join("");
+      var splitGridHtml = state.participants.map(function(p){
+        var checked = splitAmong.indexOf(p.id) !== -1;
+        return '<button type="button" class="split-btn' + (checked ? ' selected' : '') + '" data-split-toggle="' + p.id + '">' +
+          '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+          '<span>' + escapeHtml(p.name) + '</span>' +
+        '</button>';
+      }).join("");
+      var categoryOptionsHtml = CATEGORIES.map(function(c){
+        return '<option value="' + c.key + '"' + (c.key === category ? " selected" : "") + '>' + c.emoji + ' ' + c.label + '</option>';
+      }).join("");
+      var modeChipsHtml = ["equal", "exact", "percent", "shares"].map(function(mo){
+        return '<button type="button" class="settle-chip' + (mo === splitMode ? " settled" : "") + '" data-split-mode="' + mo + '">' + SPLIT_MODE_LABELS[mo] + '</button>';
+      }).join("");
+
+      root.innerHTML =
+        '<div class="modal-backdrop"><div class="modal modal-wide">' +
+          '<h3>' + (existing ? "Edit" : "Add") + ' expense</h3>' +
+          '<div class="field"><label>Description</label><input type="text" id="exp-desc" value="' + escapeAttr(descValue) + '" placeholder="e.g. Lodging deposit"></div>' +
+          '<div class="grid2">' +
+            '<div class="field"><label>Amount</label><input type="number" step="0.01" id="exp-amount" value="' + escapeAttr(amountValue) + '" placeholder="0.00"></div>' +
+            '<div class="field"><label>Category</label><select id="exp-category">' + categoryOptionsHtml + '</select></div>' +
+          '</div>' +
+          '<div class="field"><label>Who actually paid?</label><div class="payer-grid" id="exp-payer-grid">' + payerGridHtml + '</div></div>' +
+          '<div class="field"><label>Split among</label><div class="split-grid" id="exp-split-grid">' + splitGridHtml + '</div></div>' +
+          '<div class="field"><label>Split method</label><div class="settle-row" id="exp-split-mode-row">' + modeChipsHtml + '</div>' +
+            valueInputsHtml() +
+          '</div>' +
+          '<div class="actions">' +
+            '<button class="btn secondary" id="exp-cancel">Cancel</button>' +
+            '<button class="btn" id="exp-save">Save</button>' +
+          '</div>' +
+        '</div></div>';
+
+      document.getElementById("exp-cancel").onclick = function(){ root.innerHTML = ""; };
+
+      Array.prototype.slice.call(document.getElementById("exp-payer-grid").querySelectorAll("[data-payer-pick]")).forEach(function(btn){
+        btn.onclick = function(){
+          payer = btn.getAttribute("data-payer-pick");
+          document.getElementById("exp-payer-grid").querySelectorAll(".payer-btn").forEach(function(b){ b.classList.remove("selected"); });
+          btn.classList.add("selected");
+        };
+      });
+
+      Array.prototype.slice.call(document.getElementById("exp-split-grid").querySelectorAll("[data-split-toggle]")).forEach(function(btn){
+        btn.onclick = function(){
+          captureFieldValues();
+          var pid = btn.getAttribute("data-split-toggle");
+          var idx = splitAmong.indexOf(pid);
+          if (idx === -1) splitAmong.push(pid); else splitAmong.splice(idx, 1);
+          paint();
+        };
+      });
+
+      Array.prototype.slice.call(document.getElementById("exp-split-mode-row").querySelectorAll("[data-split-mode]")).forEach(function(btn){
+        btn.onclick = function(){
+          captureFieldValues();
+          splitMode = btn.getAttribute("data-split-mode");
+          splitValues = {};
+          paint();
+        };
+      });
+
+      Array.prototype.slice.call(root.querySelectorAll("[data-split-value]")).forEach(function(input){
+        input.addEventListener("input", function(){
+          splitValues[input.getAttribute("data-split-value")] = parseFloat(input.value) || 0;
+          updateSplitFeedback();
+        });
+      });
+
+      document.getElementById("exp-amount").addEventListener("input", updateSplitFeedback);
+      document.getElementById("exp-category").addEventListener("change", function(){
+        category = document.getElementById("exp-category").value;
+      });
+
+      updateSplitFeedback();
+
+      document.getElementById("exp-save").onclick = function(){
+        var desc = document.getElementById("exp-desc").value.trim();
+        var amount = currentAmountCents();
+        if (!desc || amount <= 0 || !payer || !splitAmong.length) return;
+
+        if (splitMode === "exact"){
+          var sum = splitAmong.reduce(function(s, id){ return s + Math.round((splitValues[id] || 0) * 100); }, 0);
+          if (sum !== amount) return;
+        }
+        if (splitMode === "percent"){
+          var sumPct = splitAmong.reduce(function(s, id){ return s + (splitValues[id] || 0); }, 0);
+          if (Math.round(sumPct * 100) !== 10000) return;
+        }
+
+        var cleanValues = {};
+        if (splitMode !== "equal"){
+          splitAmong.forEach(function(id){
+            var raw = splitValues[id];
+            cleanValues[id] = splitMode === "exact" ? Math.round((raw || 0) * 100) : (raw != null ? raw : (splitMode === "shares" ? 1 : 0));
+          });
+        }
+
+        if (existing){
+          var moneyChanged = existing.amountCents !== amount ||
+            existing.paidBy !== payer ||
+            JSON.stringify(existing.splitAmong.slice().sort()) !== JSON.stringify(splitAmong.slice().sort()) ||
+            (existing.splitMode || "equal") !== splitMode ||
+            JSON.stringify(existing.splitValues || {}) !== JSON.stringify(cleanValues);
+          existing.description = desc; existing.amountCents = amount; existing.paidBy = payer;
+          existing.splitAmong = splitAmong; existing.splitMode = splitMode; existing.splitValues = cleanValues;
+          existing.category = category;
+          if (moneyChanged) existing.settledBy = [];
+          logActivity('edited expense "' + desc + '"', "money");
+        } else {
+          state.expenses.push({
+            id: uid("exp"), description: desc, amountCents: amount, paidBy: payer, splitAmong: splitAmong,
+            splitMode: splitMode, splitValues: cleanValues, category: category, settledBy: [], ts: Date.now()
+          });
+          logActivity('added expense "' + desc + '" (' + fmtCents(amount) + '), paid by ' + participantName(payer), "money");
+        }
+        root.innerHTML = "";
+        scheduleSave();
+      };
+    }
+
+    paint();
+  }
+
+  function deleteExpense(id){
+    if (blockIfGuest()) return;
+    var idx = state.expenses.findIndex(function(e){ return e.id === id; });
+    if (idx === -1) return;
+    var desc = state.expenses[idx].description;
+    state.expenses.splice(idx, 1);
+    logActivity('deleted expense "' + desc + '"', "remove");
+    scheduleSave();
+  }
+
+  function toggleSettled(expenseId, personId){
+    if (blockIfGuest()) return;
+    var e = state.expenses.find(function(x){ return x.id === expenseId; });
+    if (!e) return;
+    if (!e.settledBy) e.settledBy = [];
+    var idx = e.settledBy.indexOf(personId);
+    var pname = participantName(personId);
+    if (idx === -1){
+      e.settledBy.push(personId);
+      logActivity(pname + ' settled up on "' + e.description + '"', "money");
+    } else {
+      e.settledBy.splice(idx, 1);
+      logActivity(pname + ' marked "' + e.description + '" unsettled', "default");
+    }
+    scheduleSave();
+  }
+
+  function recordSettlementPayment(from, to, amountCents){
+    if (blockIfGuest()) return;
+    if (!from || !to || !amountCents) return;
+    if (!state.settlementLog) state.settlementLog = [];
+    state.settlementLog.push({ id: uid("pay"), from: from, to: to, amountCents: amountCents, ts: Date.now() });
+    logActivity(participantName(from) + " paid " + participantName(to) + " " + fmtCents(amountCents), "money");
+    scheduleSave();
+  }
+
+  function deleteSettlementPayment(id){
+    if (blockIfGuest()) return;
+    var idx = (state.settlementLog || []).findIndex(function(p){ return p.id === id; });
+    if (idx === -1) return;
+    var p = state.settlementLog[idx];
+    state.settlementLog.splice(idx, 1);
+    logActivity("undid " + participantName(p.from) + " → " + participantName(p.to) + " " + fmtCents(p.amountCents), "remove");
+    scheduleSave();
+  }
+
+  // ---------- rendering ----------
+
+  function escapeHtml(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  var expandedComments = {};
+
+  function findCommentableItem(id){
+    var found = state.lodging.find(function(i){ return i.id === id; });
+    if (found) return { item: found, listKey: "lodging" };
+    var flight = state.flights.find(function(f){ return f.id === id; });
+    if (flight) return { item: flight, listKey: "flights" };
+    for (var i = 0; i < state.itinerary.length; i++){
+      var moment = (state.itinerary[i].moments || []).find(function(m){ return m.id === id; });
+      if (moment) return { item: moment, listKey: "itinerary" };
+    }
+    return null;
+  }
+
+  function commentableItemLabel(found){
+    var item = found.item;
+    if (found.listKey === "lodging") return item.name;
+    if (found.listKey === "flights") return (item.from || "?") + " → " + (item.to || "?");
+    return truncateText(item.text || "itinerary item", 40);
+  }
+
+  function addComment(itemId, text){
+    text = (text || "").trim();
+    if (!text) return;
+    if (blockIfGuest()) return;
+    var m = me();
+    if (!m) return promptIdentity(false);
+    var found = findCommentableItem(itemId);
+    if (!found) return;
+    if (!found.item.comments) found.item.comments = [];
+    found.item.comments.push({ id: uid("cmt"), personId: m.id, text: text, ts: Date.now() });
+    logActivity('commented on "' + commentableItemLabel(found) + '"', "default");
+    scheduleSave();
+  }
+
+  function deleteComment(itemId, commentId){
+    if (blockIfGuest()) return;
+    var found = findCommentableItem(itemId);
+    if (!found || !found.item.comments) return;
+    var idx = found.item.comments.findIndex(function(c){ return c.id === commentId; });
+    if (idx === -1) return;
+    found.item.comments.splice(idx, 1);
+    scheduleSave();
+  }
+
+  function renderComments(item){
+    var comments = item.comments || [];
+    var isOpen = !!expandedComments[item.id];
+    var toggleLabel = comments.length ? (comments.length + (comments.length === 1 ? " comment" : " comments")) : "Comment";
+    var html = '<button class="comment-toggle" data-comment-toggle="' + item.id + '">💬 ' + toggleLabel + '</button>';
+    if (isOpen){
+      html += '<div class="comment-thread">';
+      comments.forEach(function(c){
+        html += '<div class="comment-item">' +
+          '<span class="avatar" data-tip="' + escapeAttr(participantName(c.personId)) + '" style="background:' + participantColor(c.personId) + '">' + escapeHtml(participantTag(c.personId)) + '</span>' +
+          '<div class="comment-body"><span class="comment-who">' + escapeHtml(participantName(c.personId)) + '</span>' +
+          '<span class="comment-when mono">' + relTime(c.ts) + '</span>' +
+          '<div>' + escapeHtml(c.text) + '</div></div>' +
+          '<button class="icon-only" data-comment-del="' + item.id + '" data-comment-id="' + c.id + '" title="Delete">✕</button>' +
+        '</div>';
+      });
+      html += '<div class="comment-input-row">' +
+        '<input type="text" data-comment-input="' + item.id + '" placeholder="Say something...">' +
+        '<button class="btn small" data-comment-add="' + item.id + '">Post</button>' +
+      '</div>';
+      html += '</div>';
+    }
+    return html;
+  }
+
+  function linkPreviewImg(url){
+    return "https://api.microlink.io/?url=" + encodeURIComponent(url) + "&embed=image.url";
+  }
+
+
+  // ---------- itinerary (days + timed moments) ----------
+
+  function fmtTime12(t){
+    if (!t) return "";
+    var parts = t.split(":");
+    var h = parseInt(parts[0], 10);
+    var m = parts[1];
+    var ampm = h >= 12 ? "PM" : "AM";
+    var h12 = h % 12; if (h12 === 0) h12 = 12;
+    return h12 + ":" + m + " " + ampm;
+  }
+
+  var FLIGHT_TIMEZONES = ["EST","EDT","CST","CDT","MST","MDT","PST","PDT","GMT","BST","CET","CEST"];
+  function tzOptionsHtml(selected){
+    return '<option value=""></option>' + FLIGHT_TIMEZONES.map(function(tz){
+      return '<option value="' + tz + '"' + (tz === selected ? " selected" : "") + '>' + tz + '</option>';
+    }).join("");
+  }
+
+  var ITINERARY_BLOCKS = ["morning", "afternoon", "evening", "late"];
+  var ITINERARY_BLOCK_LABELS = { morning: "Morning", afternoon: "Afternoon", evening: "Evening", late: "Late" };
+  var ITINERARY_STATUS_META = {
+    needs: { label: "Needs resy", color: "var(--bad)" },
+    confirmed: { label: "Resy made", color: "var(--navy)" }
+  };
+
+  function textWithBreaks(s){
+    return escapeHtml(s || "").replace(/\n/g, "<br>");
+  }
+
+  function sortedMoments(day){
+    return (day.moments || []).slice().sort(function(a, b){
+      var blockDiff = ITINERARY_BLOCKS.indexOf(a.block || "morning") - ITINERARY_BLOCKS.indexOf(b.block || "morning");
+      if (blockDiff !== 0) return blockDiff;
+      if (!a.time && !b.time) return 0;
+      if (!a.time) return 1;
+      if (!b.time) return -1;
+      return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
+    });
+  }
+
+  function renderMomentRow(dayId, m){
+    var blockLabel = ITINERARY_BLOCK_LABELS[m.block] || "Morning";
+    var sm = ITINERARY_STATUS_META[m.status];
+    var metaBits = [];
+    if (m.location) metaBits.push("📍 " + escapeHtml(m.location));
+    if (m.time) metaBits.push(escapeHtml(fmtTime12(m.time)));
+    var metaLine = metaBits.length ? '<div class="meta">' + metaBits.join(" · ") + '</div>' : "";
+    var people = m.people || [];
+    var avatarsHtml = people.length
+      ? '<div class="avatars">' + people.map(function(pid){
+          return '<span class="avatar" data-tip="' + escapeAttr(participantName(pid)) + '" style="background:' + participantColor(pid) + '">' + escapeHtml(participantTag(pid)) + '</span>';
+        }).join("") + '</div>'
+      : "";
+    return '<div class="moment-row">' +
+      '<div class="moment-time mono">' + escapeHtml(blockLabel) + '</div>' +
+      '<div class="moment-body">' +
+        '<div class="moment-title"' + (sm ? ' style="color:' + sm.color + ';"' : '') + '>' + textWithBreaks(m.text) + '</div>' +
+        metaLine +
+        (sm ? '<div class="moment-status-tag" style="color:' + sm.color + ';">' + sm.label + '</div>' : '') +
+        (m.notes ? '<div class="meta">' + escapeHtml(m.notes) + '</div>' : '') +
+        avatarsHtml +
+        '<div class="comment-zone">' + renderComments(m) + '</div>' +
+      '</div>' +
+      '<div class="row-actions">' +
+        '<button class="icon-only" data-edit-moment="' + m.id + '" data-moment-day="' + dayId + '" title="Edit">✎</button>' +
+        '<button class="icon-only" data-del-moment="' + m.id + '" data-moment-day="' + dayId + '" title="Remove">✕</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function fmtDayHeading(iso){
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  }
+
+  function renderDayCard(day){
+    var moments = sortedMoments(day);
+    var momentsHtml = moments.length
+      ? moments.map(function(m){ return renderMomentRow(day.id, m); }).join("")
+      : '<div class="empty" style="padding:12px;">Nothing planned yet.</div>';
+    var heading = fmtDayHeading(day.date);
+    var title = day.label ? day.label : (heading || "Untitled day");
+    var subtitle = day.label && heading ? heading : "";
+    return '<div class="card day-card" draggable="true" data-drag-id="' + day.id + '">' +
+      '<div class="day-head">' +
+        '<span class="drag-handle" title="Drag to reorder">⠿</span>' +
+        '<div class="day-title-wrap">' +
+          '<div class="day-title">' + escapeHtml(title) + '</div>' +
+          (subtitle ? '<div class="day-subtitle">' + escapeHtml(subtitle) + '</div>' : '') +
+        '</div>' +
+        '<div class="row-actions">' +
+          '<button class="icon-only" data-edit-day="' + day.id + '" title="Edit day">✎</button>' +
+          '<button class="icon-only" data-del-day="' + day.id + '" title="Remove day">✕</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="moments-list">' + momentsHtml + '</div>' +
+      '<button class="ghost-btn" data-add-moment="' + day.id + '">+ Add an event</button>' +
+    '</div>';
+  }
+
+  function renderItinerary(){
+    var html = '<div class="section-head"><div><h2>Itinerary</h2><p>Drag days to reorder — events group by Morning / Afternoon / Evening / Late.</p></div><button class="btn" data-add-day>+ Add a day</button></div>';
+    if (!state.itinerary.length){
+      html += '<div class="empty">Nothing on the itinerary yet — add the first day.</div>';
+    } else {
+      state.itinerary.forEach(function(day){ html += renderDayCard(day); });
+    }
+    document.getElementById("panel-itinerary").innerHTML = html;
+  }
+
+  function renderDayPickerMonth(year, month, selectedIso){
+    var monthName = new Date(year, month, 1).toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    var firstWeekday = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var html = '<div class="cal-header">' +
+      '<button type="button" class="icon-only" data-daypick-nav="-1" title="Previous month">‹</button>' +
+      '<div class="cal-month-title">' + monthName + '</div>' +
+      '<button type="button" class="icon-only" data-daypick-nav="1" title="Next month">›</button>' +
+    '</div><div class="cal-grid">';
+    ["S","M","T","W","T","F","S"].forEach(function(w){ html += '<div class="cal-weekday">' + w + '</div>'; });
+    for (var i = 0; i < firstWeekday; i++) html += '<div class="cal-day empty-slot"></div>';
+    for (var d = 1; d <= daysInMonth; d++){
+      var iso = isoDate(year, month, d);
+      var cls = "cal-day" + (iso === selectedIso ? " pending-start" : "");
+      html += '<button type="button" class="' + cls + '" data-daypick-date="' + iso + '">' + d + '</button>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function openDayModal(existingId){
+    if (blockIfGuest()) return;
+    var existing = existingId ? state.itinerary.find(function(d){ return d.id === existingId; }) : null;
+    var root = document.getElementById("modal-root");
+    var selected = existing ? existing.date || null : null;
+    var view = { year: 2026, month: 8 };
+    if (selected){
+      var sd = new Date(selected + "T00:00:00");
+      view = { year: sd.getFullYear(), month: sd.getMonth() };
+    }
+
+    function paint(){
+      document.getElementById("day-cal-root").innerHTML = renderDayPickerMonth(view.year, view.month, selected);
+      var display = document.getElementById("day-selected-display");
+      display.textContent = selected ? fmtDayHeading(selected) : "Tap a date above";
+      display.style.color = selected ? "var(--text)" : "var(--text-muted)";
+      document.getElementById("day-save").disabled = !selected;
+      Array.prototype.slice.call(root.querySelectorAll("[data-daypick-nav]")).forEach(function(btn){
+        btn.onclick = function(){
+          view.month += parseInt(btn.getAttribute("data-daypick-nav"), 10);
+          if (view.month < 0){ view.month = 11; view.year--; }
+          if (view.month > 11){ view.month = 0; view.year++; }
+          paint();
+        };
+      });
+      Array.prototype.slice.call(root.querySelectorAll("[data-daypick-date]")).forEach(function(btn){
+        btn.onclick = function(){
+          selected = btn.getAttribute("data-daypick-date");
+          paint();
+        };
+      });
+    }
+
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<h3>' + (existing ? "Edit" : "Add") + ' a day</h3>' +
+        '<div class="card cal-card" id="day-cal-root"></div>' +
+        '<div class="field"><label>Selected date</label><div class="meta" id="day-selected-display" style="font-weight:600;"></div></div>' +
+        '<div class="field"><label>Name this day (optional)</label><input type="text" id="day-name" value="' + escapeAttr(existing ? existing.label || "" : "") + '" placeholder="e.g. Castle Day, Travel Day"></div>' +
+        '<div class="actions">' +
+          '<button class="btn secondary" id="day-cancel">Cancel</button>' +
+          '<button class="btn" id="day-save">Save</button>' +
+        '</div>' +
+      '</div></div>';
+
+    paint();
+
+    document.getElementById("day-cancel").onclick = function(){ root.innerHTML = ""; };
+    document.getElementById("day-save").onclick = function(){
+      if (!selected) return;
+      var label = document.getElementById("day-name").value.trim();
+      var heading = fmtDayHeading(selected);
+      if (existing){
+        existing.date = selected; existing.label = label;
+        logActivity('edited "' + (label || heading) + '" in itinerary');
+      } else {
+        state.itinerary.push({ id: uid("day"), date: selected, label: label, moments: [] });
+        logActivity('added "' + (label || heading) + '" to itinerary', "join");
+      }
+      root.innerHTML = "";
+      scheduleSave();
+    };
+  }
+
+  function deleteDay(id){
+    if (blockIfGuest()) return;
+    var idx = state.itinerary.findIndex(function(d){ return d.id === id; });
+    if (idx === -1) return;
+    var removedDay = state.itinerary[idx];
+    var label = removedDay.label || fmtDayHeading(removedDay.date) || "day";
+    state.itinerary.splice(idx, 1);
+    logActivity('removed "' + label + '" from itinerary', "remove");
+    scheduleSave();
+  }
+
+  function dayDisplayName(day){
+    return day.label || fmtDayHeading(day.date) || "this day";
+  }
+
+  function blockOptionsHtml(selected){
+    return ITINERARY_BLOCKS.map(function(b){
+      return '<option value="' + b + '"' + (b === selected ? " selected" : "") + '>' + ITINERARY_BLOCK_LABELS[b] + '</option>';
+    }).join("");
+  }
+
+  function statusOptionsHtml(selected){
+    var opts = [
+      { value: "", label: "Informational / suggestion" },
+      { value: "needs", label: "Needs resy / confirmation" },
+      { value: "confirmed", label: "Resy made" }
+    ];
+    return opts.map(function(o){
+      return '<option value="' + o.value + '"' + (o.value === (selected || "") ? " selected" : "") + '>' + o.label + '</option>';
+    }).join("");
+  }
+
+  function momentLogLabel(text){
+    return truncateText((text || "").split("\n")[0], 40);
+  }
+
+  function openMomentModal(dayId, existingId){
+    if (blockIfGuest()) return;
+    var day = state.itinerary.find(function(d){ return d.id === dayId; });
+    if (!day) return;
+    if (!day.moments) day.moments = [];
+    var existing = existingId ? day.moments.find(function(m){ return m.id === existingId; }) : null;
+    var root = document.getElementById("modal-root");
+    var peopleGridHtml = state.participants.map(function(p){
+      var checked = existing ? (existing.people || []).indexOf(p.id) !== -1 : false;
+      return '<button type="button" class="split-btn' + (checked ? ' selected' : '') + '" data-moment-person="' + p.id + '">' +
+        '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+        '<span>' + escapeHtml(p.name) + '</span>' +
+      '</button>';
+    }).join("");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal">' +
+        '<h3>' + (existing ? "Edit" : "Add") + ' event — ' + escapeHtml(dayDisplayName(day)) + '</h3>' +
+        '<div class="grid2">' +
+          '<div class="field"><label>When</label><select id="moment-block">' + blockOptionsHtml(existing ? existing.block || "morning" : "morning") + '</select></div>' +
+          '<div class="field"><label>Time (optional)</label><input type="time" id="moment-time" value="' + escapeAttr(existing ? existing.time || "" : "") + '"></div>' +
+        '</div>' +
+        '<div class="field"><label>What</label><textarea id="moment-text" rows="4" placeholder="e.g. Whiskey tasting at the Lost Close @ 8 PM">' + escapeHtml(existing ? existing.text || "" : "") + '</textarea></div>' +
+        '<div class="field"><label>Location</label><input type="text" id="moment-location" value="' + escapeAttr(existing ? existing.location || "" : "") + '" placeholder="e.g. The Lost Close"></div>' +
+        '<div class="field"><label>Notes</label><input type="text" id="moment-notes" value="' + escapeAttr(existing ? existing.notes || "" : "") + '" placeholder="optional details"></div>' +
+        '<div class="field"><label>Status</label><select id="moment-status">' + statusOptionsHtml(existing ? existing.status : "") + '</select></div>' +
+        '<div class="field"><label>Who\'s in on this?</label><div class="split-grid" id="moment-people-grid">' + peopleGridHtml + '</div></div>' +
+        '<div class="actions">' +
+          '<button class="btn secondary" id="moment-cancel">Cancel</button>' +
+          '<button class="btn" id="moment-save">Save</button>' +
+        '</div>' +
+      '</div></div>';
+    document.getElementById("moment-cancel").onclick = function(){ root.innerHTML = ""; };
+    Array.prototype.slice.call(document.getElementById("moment-people-grid").querySelectorAll("[data-moment-person]")).forEach(function(btn){
+      btn.onclick = function(){ btn.classList.toggle("selected"); };
+    });
+    document.getElementById("moment-save").onclick = function(){
+      var block = document.getElementById("moment-block").value;
+      var time = document.getElementById("moment-time").value;
+      var text = document.getElementById("moment-text").value.trim();
+      var location = document.getElementById("moment-location").value.trim();
+      var notes = document.getElementById("moment-notes").value.trim();
+      var status = document.getElementById("moment-status").value;
+      var people = Array.prototype.slice.call(root.querySelectorAll("[data-moment-person]"))
+        .filter(function(b){ return b.classList.contains("selected"); })
+        .map(function(b){ return b.dataset.momentPerson; });
+      if (!text) return;
+      if (existing){
+        existing.block = block; existing.time = time; existing.text = text;
+        existing.location = location; existing.notes = notes; existing.status = status; existing.people = people;
+        logActivity('edited "' + momentLogLabel(text) + '" on ' + dayDisplayName(day));
+      } else {
+        day.moments.push({ id: uid("moment"), block: block, time: time, text: text, location: location, notes: notes, status: status, people: people, comments: [] });
+        logActivity('added "' + momentLogLabel(text) + '" to ' + dayDisplayName(day), "join");
+      }
+      root.innerHTML = "";
+      scheduleSave();
+    };
+  }
+
+  function deleteMoment(dayId, momentId){
+    if (blockIfGuest()) return;
+    var day = state.itinerary.find(function(d){ return d.id === dayId; });
+    if (!day) return;
+    var idx = (day.moments || []).findIndex(function(m){ return m.id === momentId; });
+    if (idx === -1) return;
+    var text = day.moments[idx].text;
+    day.moments.splice(idx, 1);
+    logActivity('removed "' + momentLogLabel(text) + '" from ' + dayDisplayName(day), "remove");
+    scheduleSave();
+  }
+
+  // ---------- flights (flat list, pick passengers per flight) ----------
+
+  function flightsInDirection(direction){
+    return state.flights.filter(function(f){ return (f.direction || "departing") === direction; });
+  }
+
+  function fmtFlightDate(d){
+    if (!d) return "";
+    return new Date(d + "T00:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function renderFlightRow(f){
+    var route = (f.from || "?") + " → " + (f.to || "?");
+    var depStr = f.time ? (fmtTime12(f.time) + (f.timeZone ? " " + f.timeZone : "")) : "";
+    var arrStr = f.landTime ? (fmtTime12(f.landTime) + (f.landTimeZone ? " " + f.landTimeZone : "")) : "";
+    var timesPart = "";
+    if (depStr && arrStr) timesPart = depStr + " → " + arrStr;
+    else if (depStr) timesPart = "Departs " + depStr;
+    else if (arrStr) timesPart = "Lands " + arrStr;
+    var when = escapeHtml([fmtFlightDate(f.date), timesPart, f.duration].filter(Boolean).join(" · "));
+    var flightNumHtml = f.flight
+      ? '<a href="' + escapeAttr("https://www.google.com/search?q=" + encodeURIComponent(f.flight + " flight status")) + '" target="_blank" rel="noopener">' + escapeHtml(f.flight) + '</a>'
+      : "";
+    var subline = [flightNumHtml, when].filter(Boolean).join(" · ");
+    var people = f.people || [];
+    var avatarsHtml = people.map(function(pid){
+      return '<span class="avatar" data-tip="' + escapeAttr(participantName(pid)) + '" style="background:' + participantColor(pid) + '">' + escapeHtml(participantTag(pid)) + '</span>';
+    }).join("");
+    var whoHtml = people.length
+      ? '<div class="avatars flight-avatars">' + avatarsHtml + '</div>'
+      : '<span class="flight-people-names flight-people-empty">Nobody assigned yet</span>';
+    return '<div class="card flight-card" draggable="true" data-flight-drag-id="' + f.id + '">' +
+      '<div class="flight-people-row">' +
+        '<span class="drag-handle" title="Drag to reorder">⠿</span>' +
+        '<div class="flight-people">' + whoHtml + '</div>' +
+        '<div class="row-actions">' +
+          '<button class="icon-only" data-edit-flight="' + f.id + '" title="Edit">✎</button>' +
+          '<button class="icon-only" data-del-flight="' + f.id + '" title="Remove">✕</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="flight-route">' + escapeHtml(route) + '</div>' +
+      (subline ? '<div class="meta">' + subline + '</div>' : '') +
+      (f.notes ? '<div class="meta">' + escapeHtml(f.notes) + '</div>' : '') +
+      '<div class="comment-zone">' + renderComments(f) + '</div>' +
+    '</div>';
+  }
+
+  function renderFlightGroup(direction, heading){
+    var flights = flightsInDirection(direction);
+    var html = '<div class="section-head" style="margin-top:4px;"><div><h3 style="font-family:var(--font-head);font-size:16px;">' + heading + '</h3></div><button class="btn" data-add-flight="' + direction + '">+ Add flight</button></div>';
+    if (!flights.length){
+      html += '<div class="empty">No ' + direction + ' flights logged yet — add the first one.</div>';
+    } else {
+      flights.forEach(function(f){ html += renderFlightRow(f); });
+    }
+    return html;
+  }
+
+  function renderFlights(){
+    var html = '<div class="section-head"><div><h2>Flights</h2><p>Who\'s flying when, so nobody\'s stranded at baggage claim.</p></div></div>';
+    html += renderFlightGroup("departing", "✈️ Departing");
+    html += renderFlightGroup("returning", "🛬 Returning");
+    document.getElementById("panel-flights").innerHTML = html;
+  }
+
+  function openFlightModal(existingId, presetDirection){
+    if (blockIfGuest()) return;
+    var existing = existingId ? state.flights.find(function(f){ return f.id === existingId; }) : null;
+    var dirVal = existing ? (existing.direction || "departing") : (presetDirection || "departing");
+    var root = document.getElementById("modal-root");
+    var peopleGridHtml = state.participants.map(function(p){
+      var checked = existing ? (existing.people || []).indexOf(p.id) !== -1 : false;
+      return '<button type="button" class="split-btn' + (checked ? ' selected' : '') + '" data-flight-person="' + p.id + '">' +
+        '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+        '<span>' + escapeHtml(p.name) + '</span>' +
+      '</button>';
+    }).join("");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<h3>' + (existing ? "Edit" : "Add") + ' flight</h3>' +
+        '<div class="field"><label>Direction</label><select id="fl-direction">' +
+          '<option value="departing"' + (dirVal === "departing" ? " selected" : "") + '>Departing</option>' +
+          '<option value="returning"' + (dirVal === "returning" ? " selected" : "") + '>Returning</option>' +
+        '</select></div>' +
+        '<div class="field"><label>Airline / flight #</label><input type="text" id="fl-flight" value="' + escapeAttr(existing ? existing.flight || "" : "") + '" placeholder="e.g. United 1421"></div>' +
+        '<div class="grid2">' +
+          '<div class="field"><label>From</label><input type="text" id="fl-from" value="' + escapeAttr(existing ? existing.from || "" : "") + '" placeholder="e.g. JFK"></div>' +
+          '<div class="field"><label>To</label><input type="text" id="fl-to" value="' + escapeAttr(existing ? existing.to || "" : "") + '" placeholder="e.g. HDN"></div>' +
+        '</div>' +
+        '<div class="grid2">' +
+          '<div class="field"><label>Date</label><input type="date" id="fl-date" value="' + escapeAttr(existing ? existing.date || "" : "") + '"></div>' +
+          '<div class="field"><label>Duration</label><input type="text" id="fl-duration" value="' + escapeAttr(existing ? existing.duration || "" : "") + '" placeholder="e.g. 7h 45m"></div>' +
+        '</div>' +
+        '<div class="grid2">' +
+          '<div class="field"><label>Departs</label><div style="display:flex;gap:6px;">' +
+            '<input type="time" id="fl-time" value="' + escapeAttr(existing ? existing.time || "" : "") + '" style="flex:1;min-width:0;">' +
+            '<select id="fl-time-tz" style="width:84px;flex:none;">' + tzOptionsHtml(existing ? existing.timeZone || "" : "") + '</select>' +
+          '</div></div>' +
+          '<div class="field"><label>Lands</label><div style="display:flex;gap:6px;">' +
+            '<input type="time" id="fl-land-time" value="' + escapeAttr(existing ? existing.landTime || "" : "") + '" style="flex:1;min-width:0;">' +
+            '<select id="fl-land-time-tz" style="width:84px;flex:none;">' + tzOptionsHtml(existing ? existing.landTimeZone || "" : "") + '</select>' +
+          '</div></div>' +
+        '</div>' +
+        '<div class="field"><label>Notes</label><input type="text" id="fl-notes" value="' + escapeAttr(existing ? existing.notes || "" : "") + '" placeholder="layover, confirmation #, etc."></div>' +
+        '<div class="field"><label>Who\'s on this flight?</label><div class="split-grid" id="fl-people-grid">' + peopleGridHtml + '</div></div>' +
+        '<div class="actions">' +
+          '<button class="btn secondary" id="fl-cancel">Cancel</button>' +
+          '<button class="btn" id="fl-save">Save</button>' +
+        '</div>' +
+      '</div></div>';
+    document.getElementById("fl-cancel").onclick = function(){ root.innerHTML = ""; };
+    Array.prototype.slice.call(document.getElementById("fl-people-grid").querySelectorAll("[data-flight-person]")).forEach(function(btn){
+      btn.onclick = function(){ btn.classList.toggle("selected"); };
+    });
+    document.getElementById("fl-save").onclick = function(){
+      var direction = document.getElementById("fl-direction").value;
+      var flight = document.getElementById("fl-flight").value.trim();
+      var from = document.getElementById("fl-from").value.trim();
+      var to = document.getElementById("fl-to").value.trim();
+      var date = document.getElementById("fl-date").value;
+      var duration = document.getElementById("fl-duration").value.trim();
+      var time = document.getElementById("fl-time").value;
+      var timeZone = document.getElementById("fl-time-tz").value;
+      var landTime = document.getElementById("fl-land-time").value;
+      var landTimeZone = document.getElementById("fl-land-time-tz").value;
+      var notes = document.getElementById("fl-notes").value.trim();
+      var people = Array.prototype.slice.call(root.querySelectorAll("[data-flight-person]"))
+        .filter(function(b){ return b.classList.contains("selected"); })
+        .map(function(b){ return b.dataset.flightPerson; });
+      if (!from && !to && !flight) return;
+      if (existing){
+        existing.direction = direction;
+        existing.flight = flight; existing.from = from; existing.to = to;
+        existing.date = date; existing.duration = duration;
+        existing.time = time; existing.timeZone = timeZone; existing.landTime = landTime; existing.landTimeZone = landTimeZone;
+        existing.notes = notes; existing.people = people;
+        logActivity('edited a flight (' + from + ' → ' + to + ')', "default");
+      } else {
+        state.flights.push({ id: uid("flight"), direction: direction, flight: flight, from: from, to: to, date: date, duration: duration,
+          time: time, timeZone: timeZone, landTime: landTime, landTimeZone: landTimeZone, notes: notes, people: people });
+        logActivity('added a flight (' + from + ' → ' + to + ')', "join");
+      }
+      root.innerHTML = "";
+      scheduleSave();
+    };
+  }
+
+  function deleteFlight(id){
+    if (blockIfGuest()) return;
+    var idx = state.flights.findIndex(function(f){ return f.id === id; });
+    if (idx === -1) return;
+    var f = state.flights[idx];
+    state.flights.splice(idx, 1);
+    logActivity('removed a flight (' + (f.from || "?") + ' → ' + (f.to || "?") + ')', "remove");
+    scheduleSave();
+  }
+
+  // ---------- date helpers ----------
+
+  function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+  function isoDate(y, m, d){ return y + "-" + pad2(m + 1) + "-" + pad2(d); }
+  function fmtDateShort(iso){
+    return new Date(iso + "T00:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+  function fmtDateRange(startIso, endIso){
+    var s = new Date(startIso + "T00:00:00"), e = new Date(endIso + "T00:00:00");
+    var nights = Math.round((e - s) / 86400000);
+    var sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+    var startStr = fmtDateShort(startIso);
+    var endStr = sameMonth ? e.getDate() : fmtDateShort(endIso);
+    return startStr + "–" + endStr + ", " + e.getFullYear() + " · " + nights + " night" + (nights === 1 ? "" : "s");
+  }
+  function daysUntil(iso){
+    var target = new Date(iso + "T00:00:00");
+    var now = new Date();
+    var todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((target - todayMid) / 86400000);
+  }
+
+  function renderCountdown(startIso, endIso){
+    if (!startIso || !endIso) return "";
+    var days = daysUntil(startIso);
+    var daysUntilEnd = daysUntil(endIso);
+    var rangeLabel = fmtDateRange(startIso, endIso);
+    var big, label, small;
+    if (days > 30){
+      big = days; label = "days to go";
+      small = rangeLabel + " · start counting down the shifts at work.";
+    } else if (days > 7){
+      big = days; label = "days to go";
+      small = rangeLabel + " · time to start packing layers.";
+    } else if (days > 1){
+      big = days; label = "days to go";
+      small = rangeLabel + " · pack list szn. 🎒";
+    } else if (days === 1){
+      big = "1"; label = "day to go";
+      small = "Tomorrow — " + rangeLabel + ". Slàinte!";
+    } else if (days === 0){
+      big = "🏰"; label = "today";
+      small = rangeLabel + " starts now. Have a great trip!";
+    } else if (daysUntilEnd >= 0){
+      big = "🏰"; label = "on the trip";
+      small = "Day " + ((-days) + 1) + " of " + rangeLabel + ". Enjoy!";
+    } else {
+      big = "🎉"; label = "in the books";
+      small = "Hope it was epic — " + rangeLabel;
+    }
+    return '<div class="card countdown-card"><div class="countdown-big mono">' + big + '</div>' +
+      '<div class="countdown-copy"><div class="countdown-label">' + label + '</div><div class="countdown-small">' + small + '</div></div></div>';
+  }
+
+  function truncateText(s, n){
+    return s.length > n ? s.slice(0, n - 1) + "…" : s;
+  }
+
+  function statTile(value, label){
+    return '<div class="stat-tile"><div class="stat-value mono">' + escapeHtml(String(value)) + '</div><div class="stat-label">' + escapeHtml(label) + '</div></div>';
+  }
+
+  function renderStats(){
+    var checkedIn = state.participants.filter(function(p){ return p.lastSeenTs; }).length;
+    var lodgingBooked = state.lodging.filter(function(l){ return l.bookedBy; }).length;
+    var totalSpentCents = state.expenses.reduce(function(s, e){ return s + e.amountCents; }, 0);
+    var avgCents = state.participants.length ? Math.round(totalSpentCents / state.participants.length) : 0;
+    var biggest = state.expenses.slice().sort(function(a, b){ return b.amountCents - a.amountCents; })[0];
+    var totalComments = state.lodging.reduce(function(s, i){ return s + (i.comments ? i.comments.length : 0); }, 0) +
+      state.flights.reduce(function(s, f){ return s + (f.comments ? f.comments.length : 0); }, 0) +
+      state.itinerary.reduce(function(s, day){
+        return s + (day.moments || []).reduce(function(s2, m){ return s2 + (m.comments ? m.comments.length : 0); }, 0);
+      }, 0);
+    var tallies = {};
+    state.activity.forEach(function(a){ tallies[a.who] = (tallies[a.who] || 0) + 1; });
+    var mvpName = null, mvpCount = 0;
+    Object.keys(tallies).forEach(function(name){ if (tallies[name] > mvpCount){ mvpCount = tallies[name]; mvpName = name; } });
+    var catTotals = categoryTotals();
+    var topCat = CATEGORIES.filter(function(c){ return catTotals[c.key] > 0; })
+      .sort(function(a, b){ return catTotals[b.key] - catTotals[a.key]; })[0];
+
+    var html = '<div class="section-head" style="margin-top:22px;"><div><h2 style="font-size:17px;">📊 Trip Stats</h2></div></div>';
+    html += '<div class="stats-grid">';
+    html += statTile(checkedIn + " / " + state.participants.length, "Crew checked in");
+    html += statTile(state.lodging.length ? (lodgingBooked + " / " + state.lodging.length) : "—", "Lodging booked");
+    html += statTile(fmtCents(totalSpentCents), "Total spent");
+    html += statTile(fmtCents(avgCents), "Avg. per person");
+    html += statTile(biggest ? fmtCents(biggest.amountCents) : "—", biggest ? "Biggest: " + truncateText(biggest.description, 18) : "Biggest expense");
+    html += statTile(topCat ? topCat.emoji + " " + topCat.label : "—", topCat ? "Top category · " + fmtCents(catTotals[topCat.key]) : "Top category");
+    html += statTile(totalComments, "Comments posted");
+    html += statTile(mvpName || "—", "MVP (most active)");
+    html += '</div>';
+    return html;
+  }
+
+  function renderOverview(){
+    var totalCents = state.expenses.reduce(function(s,e){ return s + e.amountCents; }, 0);
+
+    var html = '<div class="section-head"><div><h2>Overview</h2></div></div>';
+    html += renderCountdown(state.trip.startDate, state.trip.endDate);
+    html += '<div class="card"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Trip spend so far</div>' +
+      '<div class="mono" style="font-size:18px;font-weight:600;">' + fmtCents(totalCents) + '</div>' +
+      '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;">' + state.expenses.length + ' expense' + (state.expenses.length===1?"":"s") + ' · ' + state.participants.length + ' people</div></div>';
+
+    html += renderStats();
+
+    html += '<div class="section-head" style="margin-top:22px;"><div><h2 style="font-size:17px;">The Crew</h2><p>Who\'s checked in, and when.</p></div></div>';
+    html += renderCrew();
+
+    document.getElementById("panel-overview").innerHTML = html;
+  }
+
+  function renderCrew(){
+    var mine = myId();
+    var sorted = state.participants.slice().sort(function(a,b){ return (b.lastSeenTs||0) - (a.lastSeenTs||0); });
+    var rows = sorted.map(function(p){
+      return '<div class="crew-row">' +
+        '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+        '<span class="crew-name">' + escapeHtml(p.name) + (p.id === mine ? ' <span class="you-tag">you</span>' : '') + '</span>' +
+        '<span class="crew-seen mono">' + (p.lastSeenTs ? relTime(p.lastSeenTs) : "hasn't checked in") + '</span>' +
+      '</div>';
+    }).join("");
+    return '<div class="card crew-card">' + rows + '</div>';
+  }
+
+  var expandedBalances = {};
+
+  function expenseContribution(e, personId){
+    if (!e.splitAmong.length) return 0;
+    var settled = e.settledBy || [];
+    var portions = computeExpensePortions(e);
+    var contribution = 0;
+    e.splitAmong.forEach(function(pid){
+      if (pid === e.paidBy) return;
+      if (settled.indexOf(pid) !== -1) return;
+      var portion = portions[pid] || 0;
+      if (pid === personId) contribution -= portion;
+      if (e.paidBy === personId) contribution += portion;
+    });
+    return contribution;
+  }
+
+  function renderBalanceBreakdown(personId, settlements){
+    var name = participantName(personId);
+    var lines = [];
+    state.expenses.forEach(function(e){
+      var c = expenseContribution(e, personId);
+      if (c === 0) return;
+      var role = e.paidBy === personId ? name + " paid, owed back" : name + "'s share";
+      lines.push({ desc: e.description, role: role, cents: c });
+    });
+    (state.settlementLog || []).forEach(function(p){
+      if (p.from === personId){
+        lines.push({ desc: "Paid " + participantName(p.to), role: "settle-up", cents: p.amountCents });
+      } else if (p.to === personId){
+        lines.push({ desc: "Received from " + participantName(p.from), role: "settle-up", cents: -p.amountCents });
+      }
+    });
+    if (!lines.length){
+      return '<div class="balance-breakdown"><div class="empty" style="padding:10px;">No expenses touch this balance.</div></div>';
+    }
+    var rows = lines.map(function(l){
+      var sign = l.cents > 0 ? "+" : "−";
+      var cls = l.cents > 0 ? "owed" : "owes";
+      return '<div class="breakdown-row"><span class="breakdown-desc">' + escapeHtml(l.desc) + ' <span class="breakdown-role">(' + l.role + ')</span></span>' +
+        '<span class="mono breakdown-amt ' + cls + '">' + sign + fmtCents(Math.abs(l.cents)) + '</span></div>';
+    }).join("");
+    var totalCents = lines.reduce(function(s, l){ return s + l.cents; }, 0);
+    var totalCls = totalCents > 0 ? "owed" : (totalCents < 0 ? "owes" : "");
+    var totalLabel = totalCents > 0 ? name + " is owed" : (totalCents < 0 ? name + " owes" : name + " is settled up");
+    var totalSign = totalCents > 0 ? "+" : (totalCents < 0 ? "−" : "");
+    var totalRow = '<div class="breakdown-total"><span class="breakdown-desc">' + totalLabel + '</span>' +
+      '<span class="mono breakdown-amt ' + totalCls + '">' + totalSign + fmtCents(Math.abs(totalCents)) + '</span></div>';
+
+    var whoHtml = "";
+    if (settlements){
+      var pays = settlements.filter(function(s){ return s.from === personId; });
+      var receives = settlements.filter(function(s){ return s.to === personId; });
+      if (pays.length){
+        whoHtml += pays.map(function(s){
+          return '<div class="breakdown-row"><span class="breakdown-desc">💸 ' + name + ' pays <strong>' + escapeHtml(participantName(s.to)) + '</strong></span>' +
+            '<span class="mono breakdown-amt owes">' + fmtCents(s.amount) + '</span></div>' +
+            '<div style="text-align:right;margin:2px 0 6px;"><button class="settle-chip" data-mark-paid-from="' + s.from + '" data-mark-paid-to="' + s.to + '" data-mark-paid-amt="' + s.amount + '">✓ Mark as paid</button></div>';
+        }).join("");
+      }
+      if (receives.length){
+        whoHtml += receives.map(function(s){
+          return '<div class="breakdown-row"><span class="breakdown-desc">💸 ' + name + ' collects from <strong>' + escapeHtml(participantName(s.from)) + '</strong></span>' +
+            '<span class="mono breakdown-amt owed">' + fmtCents(s.amount) + '</span></div>' +
+            '<div style="text-align:right;margin:2px 0 6px;"><button class="settle-chip" data-mark-paid-from="' + s.from + '" data-mark-paid-to="' + s.to + '" data-mark-paid-amt="' + s.amount + '">✓ Mark as received</button></div>';
+        }).join("");
+      }
+      if (whoHtml) whoHtml = '<div class="breakdown-who">' + whoHtml + '</div>';
+    }
+
+    return '<div class="balance-breakdown">' + rows + totalRow + whoHtml + '</div>';
+  }
+
+  function openMathHelpModal(){
+    var root = document.getElementById("modal-root");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<div class="modal-head"><h3>🧮 How the money math works</h3><button class="icon-only" id="math-help-close" title="Close">✕</button></div>' +
+        '<p>Nobody has to trust it blindly — here\'s the whole process, with a simple example.</p>' +
+        '<div style="display:flex;gap:16px;font-size:12.5px;font-weight:600;margin:-6px 0 12px;">' +
+          '<span style="color:var(--good);">● owed = money coming to you</span>' +
+          '<span style="color:var(--bad);">● owes = money you need to pay</span>' +
+        '</div>' +
+        '<div class="math-flow">' +
+          '<div class="math-step">' +
+            '<div class="math-step-num">1</div>' +
+            '<div class="math-step-body">' +
+              '<div class="math-step-title">Every expense gets split into shares</div>' +
+              '<div class="math-step-desc">Say Alex pays <b>$30</b> for pizza, split 3 ways between Alex, Bailey, and Casey. Each person\'s "share" is <b>$10</b>. Bailey and Casey each now <span style="color:var(--bad);font-weight:600;">owe Alex $10</span>.</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="math-arrow">↓</div>' +
+          '<div class="math-step">' +
+            '<div class="math-step-num">2</div>' +
+            '<div class="math-step-body">' +
+              '<div class="math-step-title">We add up every expense, for every person</div>' +
+              '<div class="math-step-desc">Now Bailey pays <b>$15</b> for drinks, split 3 ways — each share is <b>$5</b>. Adding both expenses together per person:' +
+                '<br>• <b>Alex</b>: <span style="color:var(--good);font-weight:600;">is owed $20</span> for pizza, <span style="color:var(--bad);font-weight:600;">owes $5</span> for drinks → net <span class="mono" style="color:var(--good);font-weight:700;">+$15 (is owed)</span>' +
+                '<br>• <b>Bailey</b>: <span style="color:var(--bad);font-weight:600;">owes $10</span> for pizza, <span style="color:var(--good);font-weight:600;">is owed $10</span> for drinks → net <b>$0</b> (already even!)' +
+                '<br>• <b>Casey</b>: <span style="color:var(--bad);font-weight:600;">owes $10</span> for pizza, <span style="color:var(--bad);font-weight:600;">owes $5</span> for drinks → net <span class="mono" style="color:var(--bad);font-weight:700;">−$15 (owes)</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="math-arrow">↓</div>' +
+          '<div class="math-step">' +
+            '<div class="math-step-num">3</div>' +
+            '<div class="math-step-body">' +
+              '<div class="math-step-title">We simplify to the fewest payments possible</div>' +
+              '<div class="math-step-desc">Instead of 4 separate reimbursements bouncing around, the app nets it all out: <b>Casey</b> (who <span style="color:var(--bad);font-weight:700;">owes</span>) <b>just pays Alex $15</b>, once — Alex is the one who <span style="color:var(--good);font-weight:700;">is owed</span>. Bailey doesn\'t pay or collect anything — they already broke even.</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<p style="margin-top:14px;margin-bottom:0;">That\'s the exact same process behind every number on this tab. Tap any name under "Suggested settle-up," or any balance card, to see this same math done with your real expenses.</p>' +
+      '</div></div>';
+    document.getElementById("math-help-close").onclick = function(){ root.innerHTML = ""; };
+  }
+
+  function renderBudget(){
+    var bal = computeBalances();
+    var settlements = computeSettlements(bal);
+    var totalSpentCents = state.expenses.reduce(function(s,e){ return s + e.amountCents; }, 0);
+    var outstandingCents = Object.keys(bal).reduce(function(s,id){ return s + Math.max(bal[id], 0); }, 0);
+    var html = '<div class="section-head"><div><h2>Expenses</h2><p>Log what you paid for — we\'ll do the awkward math so you don\'t have to. <button class="math-help-link" id="math-help-open">🧮 How does this math work?</button></p></div><button class="btn" id="add-expense">+ Add expense</button></div>';
+
+    html += '<div class="grid2" style="margin-bottom:14px;">' +
+      '<div class="card"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Total spent</div><div class="mono" style="font-size:18px;font-weight:600;">' + fmtCents(totalSpentCents) + '</div></div>' +
+      '<div class="card"><div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Still being sorted out</div><div class="mono" style="font-size:18px;font-weight:600;">' + fmtCents(outstandingCents) + '</div></div>' +
+    '</div>';
+
+    html += '<div class="stack">';
+    state.participants.forEach(function(p){
+      var v = bal[p.id] || 0;
+      var cls = v > 0 ? "owed" : (v < 0 ? "owes" : "even");
+      var text = v > 0 ? "is owed " + fmtCents(v) : (v < 0 ? "owes " + fmtCents(-v) : "settled up");
+      var isOpen = !!expandedBalances[p.id];
+      html += '<div class="card balance-card">' +
+        '<div class="balance-row" data-balance-toggle="' + p.id + '">' +
+          '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>' +
+          '<div class="balance-info"><div class="balance-name">' + escapeHtml(p.name) + '</div><div class="balance-sub">' + text + '</div></div>' +
+          '<span class="balance-pill ' + cls + '">' + (v === 0 ? "$0.00" : (v > 0 ? "+" : "−") + fmtCents(Math.abs(v))) + '</span>' +
+          '<span class="balance-caret">' + (isOpen ? "▾" : "▸") + '</span>' +
+        '</div>' +
+        (isOpen ? renderBalanceBreakdown(p.id, settlements) : "") +
+      '</div>';
+    });
+    html += '</div>';
+
+    html += '<div class="card" style="margin-top:14px;"><div style="font-weight:600;font-size:13.5px;margin-bottom:10px;">🤝 Suggested settle-up</div>';
+    if (!settlements.length){
+      html += '<div style="color:var(--text-muted);font-size:13px;">Everyone\'s square — nobody owes anybody anything.</div>';
+    } else {
+      html += '<div style="color:var(--text-muted);font-size:12px;margin-bottom:8px;">Tap anyone to see exactly which expenses add up to that number.</div>';
+      settlements.forEach(function(s){
+        var isOpen = !!expandedBalances[s.from];
+        html += '<div class="flow-card" data-settleflow-toggle="' + s.from + '" style="cursor:pointer;">' +
+          '<span class="avatar" data-tip="' + escapeAttr(participantName(s.from)) + '" style="background:' + participantColor(s.from) + '">' + escapeHtml(participantTag(s.from)) + '</span>' +
+          '<span class="flow-name">' + escapeHtml(participantName(s.from)) + '</span>' +
+          '<span class="flow-arrow">→</span>' +
+          '<span class="avatar" data-tip="' + escapeAttr(participantName(s.to)) + '" style="background:' + participantColor(s.to) + '">' + escapeHtml(participantTag(s.to)) + '</span>' +
+          '<span class="flow-name">' + escapeHtml(participantName(s.to)) + '</span>' +
+          '<span class="flow-amount mono">' + fmtCents(s.amount) + '</span>' +
+          '<span class="balance-caret" style="margin-left:2px;">' + (isOpen ? "▾" : "▸") + '</span>' +
+        '</div>' +
+        (isOpen ? renderBalanceBreakdown(s.from, settlements) : "");
+      });
+    }
+    html += '</div>';
+
+    html += renderSettlementLog();
+
+    html += renderCategoryBreakdown();
+
+    html += '<div class="section-head" style="margin-top:22px;"><h2 style="font-size:17px;">Expenses</h2></div>';
+    if (!state.expenses.length){
+      html += '<div class="empty">No expenses logged yet.</div>';
+    } else {
+      state.expenses.slice().reverse().forEach(function(e){
+        var settled = e.settledBy || [];
+        var owers = e.splitAmong.filter(function(pid){ return pid !== e.paidBy; });
+        var allSettled = owers.length > 0 && owers.every(function(pid){ return settled.indexOf(pid) !== -1; });
+        var payerColor = participantColor(e.paidBy);
+        var catMeta = categoryMeta(e.category || "Other");
+        var modeLabel = e.splitMode && e.splitMode !== "equal" ? " (" + SPLIT_MODE_LABELS[e.splitMode].toLowerCase() + ")" : "";
+        var chips = owers.map(function(pid){
+          var isSettled = settled.indexOf(pid) !== -1;
+          return '<button class="settle-chip' + (isSettled ? ' settled' : '') + '" data-settle-exp="' + e.id + '" data-settle-person="' + pid + '">' +
+            (isSettled ? '✓ ' : '') + escapeHtml(participantTag(pid)) + '</button>';
+        }).join("");
+        html += '<div class="card expense-card" style="border-left:3px solid ' + payerColor + ';">' +
+          '<div class="vote-row">' +
+          '<span class="avatar" data-tip="' + escapeAttr(participantName(e.paidBy)) + ' paid" style="background:' + payerColor + '">' + escapeHtml(participantTag(e.paidBy)) + '</span>' +
+          '<div class="info">' +
+          '<div class="name">' + catMeta.emoji + ' ' + escapeHtml(e.description) + (allSettled ? ' <span class="balance-pill even" style="margin-left:6px;">all settled</span>' : '') + '</div>' +
+          '<div class="meta"><strong>' + escapeHtml(participantName(e.paidBy)) + '</strong> paid · split ' + e.splitAmong.length + ' way' + (e.splitAmong.length===1?"":"s") + modeLabel + '</div>' +
+          (owers.length ? '<div class="settle-row">' + chips + '</div>' : '') +
+          '</div><div class="amt mono" style="font-weight:600;font-size:15px;min-width:80px;">' + fmtCents(e.amountCents) + '</div>' +
+          '<div class="row-actions"><button class="icon-only" data-editexp="' + e.id + '" title="Edit">✎</button><button class="icon-only" data-delexp="' + e.id + '" title="Delete">✕</button></div>' +
+          '</div></div>';
+      });
+    }
+    document.getElementById("panel-budget").innerHTML = html;
+  }
+
+  function categoryTotals(){
+    var totals = {};
+    CATEGORIES.forEach(function(c){ totals[c.key] = 0; });
+    state.expenses.forEach(function(e){
+      var key = e.category && totals.hasOwnProperty(e.category) ? e.category : "Other";
+      totals[key] += e.amountCents;
+    });
+    return totals;
+  }
+
+  function renderCategoryBreakdown(){
+    var totals = categoryTotals();
+    var cats = CATEGORIES.filter(function(c){ return totals[c.key] > 0; })
+      .sort(function(a, b){ return totals[b.key] - totals[a.key]; });
+    if (!cats.length) return "";
+    var rows = cats.map(function(c){
+      return '<div class="flow-card"><span style="font-size:16px;flex:none;">' + c.emoji + '</span>' +
+        '<span class="flow-name">' + c.label + '</span>' +
+        '<span class="flow-amount mono">' + fmtCents(totals[c.key]) + '</span></div>';
+    }).join("");
+    return '<div class="card" style="margin-top:14px;"><div style="font-weight:600;font-size:13.5px;margin-bottom:10px;">📊 Spend by category</div>' + rows + '</div>';
+  }
+
+  function renderSettlementLog(){
+    var log = state.settlementLog || [];
+    if (!log.length) return "";
+    var rows = log.slice().reverse().map(function(p){
+      return '<div class="flow-card">' +
+        '<span class="avatar" data-tip="' + escapeAttr(participantName(p.from)) + '" style="background:' + participantColor(p.from) + '">' + escapeHtml(participantTag(p.from)) + '</span>' +
+        '<span class="flow-name">' + escapeHtml(participantName(p.from)) + '</span>' +
+        '<span class="flow-arrow">→</span>' +
+        '<span class="avatar" data-tip="' + escapeAttr(participantName(p.to)) + '" style="background:' + participantColor(p.to) + '">' + escapeHtml(participantTag(p.to)) + '</span>' +
+        '<span class="flow-name">' + escapeHtml(participantName(p.to)) + '</span>' +
+        '<span class="flow-amount mono">' + fmtCents(p.amountCents) + '</span>' +
+        '<button class="icon-only" data-undo-payment="' + p.id + '" title="Undo this">✕</button>' +
+      '</div>';
+    }).join("");
+    return '<div class="card" style="margin-top:14px;"><div style="font-weight:600;font-size:13.5px;margin-bottom:10px;">✅ Recorded payments</div>' + rows + '</div>';
+  }
+
+  function activityFeedHtml(){
+    if (!state.activity.length){
+      return '<div class="empty">Nothing yet.</div>';
+    }
+    var html = '<div class="card">';
+    state.activity.forEach(function(a){
+      var d = new Date(a.ts);
+      html += '<div class="activity-item"><span class="dot ' + (a.type || "default") + '"></span><span class="when">' + d.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + '</span><span><strong>' + escapeHtml(a.who) + '</strong> ' + escapeHtml(a.text) + '</span></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function openActivityModal(){
+    var root = document.getElementById("modal-root");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<div class="modal-head"><h3>Activity</h3><button class="icon-only" id="activity-close" title="Close">✕</button></div>' +
+        '<p>Who did what.</p>' +
+        activityFeedHtml() +
+      '</div></div>';
+    document.getElementById("activity-close").onclick = function(){ root.innerHTML = ""; };
+  }
+
+  function addFeatureRequest(text){
+    text = (text || "").trim();
+    if (!text) return;
+    if (blockIfGuest()) return;
+    var m = me();
+    if (!m) return promptIdentity(false);
+    if (!state.featureRequests) state.featureRequests = [];
+    state.featureRequests.unshift({ id: uid("feat"), personId: m.id, text: text, ts: Date.now(), votes: [] });
+    logActivity('requested a feature: "' + truncateText(text, 60) + '"', "join");
+    scheduleSave();
+  }
+
+  function deleteFeatureRequest(id){
+    if (blockIfGuest()) return;
+    var idx = (state.featureRequests || []).findIndex(function(r){ return r.id === id; });
+    if (idx === -1) return;
+    state.featureRequests.splice(idx, 1);
+    scheduleSave();
+  }
+
+  function toggleFeatureVote(id){
+    if (blockIfGuest()) return;
+    var m = me();
+    if (!m) return promptIdentity(false);
+    var req = (state.featureRequests || []).find(function(r){ return r.id === id; });
+    if (!req) return;
+    if (!req.votes) req.votes = [];
+    var idx = req.votes.indexOf(m.id);
+    if (idx === -1) req.votes.push(m.id); else req.votes.splice(idx, 1);
+    scheduleSave();
+  }
+
+  function sortedFeatureRequests(){
+    return (state.featureRequests || []).slice().sort(function(a, b){
+      var av = (a.votes || []).length, bv = (b.votes || []).length;
+      if (av !== bv) return bv - av;
+      return b.ts - a.ts;
+    });
+  }
+
+  function featureRequestsHtml(){
+    var reqs = sortedFeatureRequests();
+    var m = me();
+    var listHtml = reqs.length
+      ? reqs.map(function(r){
+          var votes = r.votes || [];
+          var voted = m && votes.indexOf(m.id) !== -1;
+          return '<div class="comment-item">' +
+            '<span class="avatar" data-tip="' + escapeAttr(participantName(r.personId)) + '" style="background:' + participantColor(r.personId) + '">' + escapeHtml(participantTag(r.personId)) + '</span>' +
+            '<div class="comment-body"><span class="comment-who">' + escapeHtml(participantName(r.personId)) + '</span>' +
+            '<span class="comment-when mono">' + relTime(r.ts) + '</span>' +
+            '<div>' + escapeHtml(r.text) + '</div></div>' +
+            '<button class="upvote-btn' + (voted ? " voted" : "") + '" data-feature-vote="' + r.id + '" title="' + (voted ? "Remove your vote" : "Upvote this") + '">▲ ' + votes.length + '</button>' +
+            '<button class="icon-only" data-feature-del="' + r.id + '" title="Delete">✕</button>' +
+          '</div>';
+        }).join("")
+      : '<div class="empty">No feature requests yet — be the first to ask for something.</div>';
+    return '<div class="comment-thread" style="margin-top:0; padding-top:0; border-top:none;">' + listHtml + '</div>' +
+      '<div class="comment-input-row" style="margin-top:12px;">' +
+        '<input type="text" id="feature-input" placeholder="What should we add or fix?">' +
+        '<button class="btn small" id="feature-add">Submit</button>' +
+      '</div>';
+  }
+
+  function openFeatureModal(){
+    var root = document.getElementById("modal-root");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<div class="modal-head"><h3>💡 Feature Requests</h3><button class="icon-only" id="feature-close" title="Close">✕</button></div>' +
+        '<p>Got an idea to make this less janky? Drop it below — top-voted rises to the top.</p>' +
+        featureRequestsHtml() +
+      '</div></div>';
+    document.getElementById("feature-close").onclick = function(){ root.innerHTML = ""; };
+    document.getElementById("feature-add").onclick = function(){
+      addFeatureRequest(document.getElementById("feature-input").value);
+      openFeatureModal();
+    };
+    document.getElementById("feature-input").addEventListener("keydown", function(e){
+      if (e.key === "Enter"){ e.preventDefault(); document.getElementById("feature-add").click(); }
+    });
+    Array.prototype.slice.call(root.querySelectorAll("[data-feature-vote]")).forEach(function(btn){
+      btn.onclick = function(){
+        toggleFeatureVote(btn.getAttribute("data-feature-vote"));
+        openFeatureModal();
+      };
+    });
+    Array.prototype.slice.call(root.querySelectorAll("[data-feature-del]")).forEach(function(btn){
+      btn.onclick = function(){
+        deleteFeatureRequest(btn.getAttribute("data-feature-del"));
+        openFeatureModal();
+      };
+    });
+  }
+
+  // ---------- trip chat ----------
+
+  var CHAT_SEEN_KEY = "scotland2026_chat_seen_ts";
+  var chatOpen = false;
+
+  function getChatSeenTs(){
+    try { return parseInt(localStorage.getItem(CHAT_SEEN_KEY) || "0", 10) || 0; } catch(e){ return 0; }
+  }
+  function setChatSeenTs(ts){
+    try { localStorage.setItem(CHAT_SEEN_KEY, String(ts)); } catch(e){}
+  }
+
+  function sendChatMessage(text){
+    text = (text || "").trim();
+    if (!text) return;
+    if (blockIfGuest()) return;
+    var m = me();
+    if (!m) return promptIdentity(false);
+    if (!state.chat) state.chat = [];
+    state.chat.push({ id: uid("msg"), personId: m.id, text: text, ts: Date.now() });
+    if (state.chat.length > 300) state.chat = state.chat.slice(state.chat.length - 300);
+    setChatSeenTs(Date.now());
+    scheduleSave();
+  }
+
+  function renderChatMessages(){
+    var box = document.getElementById("chat-messages");
+    if (!box) return;
+    var msgs = state.chat || [];
+    var mine = myId();
+    box.innerHTML = msgs.length ? msgs.map(function(msg){
+      var isMine = msg.personId === mine;
+      return '<div class="chat-msg' + (isMine ? " mine" : "") + '">' +
+        (isMine ? "" : '<span class="avatar" data-tip="' + escapeAttr(participantName(msg.personId)) + '" style="background:' + participantColor(msg.personId) + '">' + escapeHtml(participantTag(msg.personId)) + '</span>') +
+        '<div class="chat-col">' +
+          '<div class="chat-meta">' + (isMine ? "" : escapeHtml(participantName(msg.personId)) + " · ") + relTime(msg.ts) + '</div>' +
+          '<div class="chat-bubble">' + escapeHtml(msg.text) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("") : '<div class="empty">No messages yet — say hi.</div>';
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function renderChatBadge(){
+    var badge = document.getElementById("chat-badge");
+    if (!badge) return;
+    var msgs = state.chat || [];
+    var seenTs = getChatSeenTs();
+    var mine = myId();
+    var unread = msgs.filter(function(msg){ return msg.ts > seenTs && msg.personId !== mine; }).length;
+    if (!chatOpen && unread > 0){
+      badge.textContent = unread > 9 ? "9+" : String(unread);
+      badge.classList.remove("hidden");
+    } else {
+      badge.classList.add("hidden");
+    }
+  }
+
+  function renderChat(){
+    renderChatBadge();
+    if (chatOpen) renderChatMessages();
+  }
+
+  function openChatPanel(){
+    chatOpen = true;
+    document.getElementById("chat-panel").classList.remove("hidden");
+    renderChatMessages();
+    var msgs = state.chat || [];
+    if (msgs.length) setChatSeenTs(msgs[msgs.length - 1].ts);
+    renderChatBadge();
+  }
+  function closeChatPanel(){
+    chatOpen = false;
+    document.getElementById("chat-panel").classList.add("hidden");
+  }
+  function toggleChatPanel(){
+    if (chatOpen) closeChatPanel(); else openChatPanel();
+  }
+
+  function renderIdentityChip(){
+    var m = me();
+    var av = document.getElementById("identity-avatar");
+    if (m){
+      document.getElementById("identity-name").textContent = m.name;
+      av.textContent = m.tag || initials(m.name);
+      av.style.background = m.color || "var(--text-muted)";
+    } else if (isGuest()){
+      document.getElementById("identity-name").textContent = "Guest (view only)";
+      av.textContent = "👀";
+      av.style.background = "var(--text-muted)";
+    } else {
+      document.getElementById("identity-name").textContent = "Pick your name";
+      av.textContent = "?";
+      av.style.background = "var(--text-muted)";
+    }
+  }
+
+  // ---------- presence (true real-time, via Firebase connection state) ----------
+
+  var presenceConnected = false;
+
+  function registerPresence(){
+    if (!presenceConnected) return;
+    var m = me();
+    if (m){
+      var myPresRef = db.ref("scotland2026/presence/" + m.id);
+      myPresRef.onDisconnect().remove();
+      myPresRef.set({
+        name: m.name, tag: m.tag || "", color: m.color || "",
+        ts: firebase.database.ServerValue.TIMESTAMP
+      });
+    } else if (isGuest()){
+      var guestPresRef = db.ref("scotland2026/presence/" + guestSessionId());
+      guestPresRef.onDisconnect().remove();
+      guestPresRef.set({
+        name: "Guest", tag: "👀", color: "var(--text-muted)", isGuest: true,
+        ts: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+  }
+
+  function setupPresence(){
+    db.ref(".info/connected").on("value", function(snap){
+      presenceConnected = snap.val() === true;
+      if (presenceConnected) registerPresence();
+    });
+    db.ref("scotland2026/presence").on("value", function(snap){
+      renderPresence(snap.val() || {});
+    });
+  }
+
+  function renderPresence(presenceMap){
+    var el = document.getElementById("presence-widget");
+    if (!el) return;
+    var ids = Object.keys(presenceMap);
+    if (!ids.length){
+      el.classList.add("hidden");
+      el.innerHTML = "";
+      return;
+    }
+    el.classList.remove("hidden");
+    var mine = myId() || (isGuest() ? guestSessionId() : null);
+    var people = ids.map(function(id){
+      var p = presenceMap[id];
+      return { id: id, name: p.name, tag: p.tag, color: p.color };
+    });
+    var avatarsHtml = people.slice(0, 6).map(function(p){
+      return '<span class="avatar" data-tip="' + escapeAttr(p.name) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>';
+    }).join("");
+    var label;
+    if (people.length === 1){
+      label = people[0].id === mine ? "just you, right now" : people[0].name + " is around";
+    } else {
+      label = people.length + " around right now";
+    }
+    el.innerHTML = '<span class="presence-dot"></span><span class="presence-avatars">' + avatarsHtml + '</span><span class="presence-label">' + escapeHtml(label) + '</span>';
+  }
+
+  function renderBrandSub(){
+    var n = state.participants.filter(function(p){ return p.lastSeenTs; }).length;
+    var total = state.participants.length;
+    var text = n === 0 ? "Nobody's checked in yet" : n + " of " + total + " checked in";
+    document.getElementById("trip-sub").textContent = text;
+  }
+
+  function renderAll(){
+    renderOverview();
+    renderLodging();
+    renderFlights();
+    renderItinerary();
+    renderBudget();
+    renderIdentityChip();
+    renderBrandSub();
+    renderChat();
+  }
+
+  // ---------- events ----------
+
+  function activateTab(key){
+    document.querySelectorAll("nav.tabs button[data-tab]").forEach(function(b){
+      b.classList.toggle("active", b.dataset.tab === key);
+    });
+    document.querySelectorAll(".panel").forEach(function(p){
+      p.classList.toggle("active", p.id === "panel-" + key);
+    });
+    if (key === "budget" && !hasSeenMathHelp()){
+      markMathHelpSeen();
+      openMathHelpModal();
+    }
+  }
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-tab]");
+    if (btn) activateTab(btn.dataset.tab);
+  });
+
+  var TAB_ORDER_KEY = "scotland2026_taborder";
+
+  function applySavedTabOrder(){
+    var nav = document.getElementById("tabs");
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(TAB_ORDER_KEY) || "null"); } catch(e){}
+    if (!saved || !Array.isArray(saved)) return;
+    var buttons = Array.prototype.slice.call(nav.querySelectorAll("button[data-tab]"));
+    var byKey = {};
+    buttons.forEach(function(b){ byKey[b.dataset.tab] = b; });
+    saved.forEach(function(key){ if (byKey[key]) nav.appendChild(byKey[key]); });
+    buttons.forEach(function(b){ if (saved.indexOf(b.dataset.tab) === -1) nav.appendChild(b); });
+  }
+
+  function saveTabOrder(){
+    var nav = document.getElementById("tabs");
+    var order = Array.prototype.map.call(nav.querySelectorAll("button[data-tab]"), function(b){ return b.dataset.tab; });
+    try { localStorage.setItem(TAB_ORDER_KEY, JSON.stringify(order)); } catch(e){}
+  }
+
+  applySavedTabOrder();
+
+  nav_drag_delegate();
+  function nav_drag_delegate(){
+    var nav = document.getElementById("tabs");
+    var dragBtn = null;
+
+    nav.addEventListener("dragstart", function(e){
+      var btn = e.target.closest("button[data-tab]");
+      if (!btn) return;
+      dragBtn = btn;
+      if (e.dataTransfer){
+        e.dataTransfer.effectAllowed = "move";
+        try { e.dataTransfer.setData("text/plain", btn.dataset.tab); } catch(err){}
+      }
+      btn.classList.add("dragging");
+    });
+
+    nav.addEventListener("dragend", function(){
+      if (dragBtn) dragBtn.classList.remove("dragging");
+      dragBtn = null;
+      saveTabOrder();
+    });
+
+    nav.addEventListener("dragover", function(e){
+      if (!dragBtn) return;
+      var btn = e.target.closest("button[data-tab]");
+      if (!btn || btn === dragBtn) return;
+      e.preventDefault();
+      var rect = btn.getBoundingClientRect();
+      var before = (e.clientX - rect.left) < rect.width / 2;
+      nav.insertBefore(dragBtn, before ? btn : btn.nextSibling);
+    });
+
+    nav.addEventListener("drop", function(e){
+      if (!dragBtn) return;
+      e.preventDefault();
+      saveTabOrder();
+      dragBtn = null;
+    });
+  }
+
+  document.getElementById("identity-chip").addEventListener("click", function(){
+    promptIdentity(true);
+  });
+
+  document.getElementById("activity-open").addEventListener("click", openActivityModal);
+  document.getElementById("feature-open").addEventListener("click", openFeatureModal);
+
+  document.getElementById("chat-fab").addEventListener("click", toggleChatPanel);
+  document.getElementById("chat-minimize").addEventListener("click", closeChatPanel);
+  document.getElementById("chat-send").addEventListener("click", function(){
+    var input = document.getElementById("chat-input");
+    sendChatMessage(input.value);
+    input.value = "";
+    input.focus();
+  });
+  document.getElementById("chat-input").addEventListener("keydown", function(e){
+    if (e.key === "Enter"){ e.preventDefault(); document.getElementById("chat-send").click(); }
+  });
+
+  (function setupChatResize(){
+    var handle = document.getElementById("chat-resize-handle");
+    var panel = document.getElementById("chat-panel");
+    var dragging = false;
+    var startX, startY, startW, startH;
+    handle.addEventListener("pointerdown", function(e){
+      dragging = true;
+      startX = e.clientX; startY = e.clientY;
+      var rect = panel.getBoundingClientRect();
+      startW = rect.width; startH = rect.height;
+      handle.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    handle.addEventListener("pointermove", function(e){
+      if (!dragging) return;
+      var newW = startW + (startX - e.clientX);
+      var newH = startH + (startY - e.clientY);
+      var maxW = window.innerWidth - 32;
+      var maxH = window.innerHeight - 150;
+      panel.style.width = Math.max(280, Math.min(maxW, newW)) + "px";
+      panel.style.height = Math.max(280, Math.min(maxH, newH)) + "px";
+    });
+    handle.addEventListener("pointerup", function(){ dragging = false; });
+    handle.addEventListener("pointercancel", function(){ dragging = false; });
+  })();
+
+  document.getElementById("theme-toggle").addEventListener("click", function(){
+    var root = document.documentElement;
+    var cur = root.getAttribute("data-theme") || "dark";
+    var next = cur === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("scotland2026_theme", next); } catch(e){}
+  });
+
+  document.getElementById("modal-root").addEventListener("click", function(e){
+    if (e.target.classList && e.target.classList.contains("modal-backdrop")){
+      e.target.parentElement.innerHTML = "";
+    }
+  });
+
+  function cardListKey(el){
+    var host = el.closest("[data-list]");
+    if (host) return host.dataset.list;
+    var panel = el.closest(".panel");
+    return panel ? panel.id.replace("panel-", "") : null;
+  }
+
+  main_click_delegate();
+  function main_click_delegate(){
+    document.querySelector("main").addEventListener("click", function(e){
+      var t = e.target;
+      var addLodgingBtn = t.closest("[data-add-lodging]");
+      if (addLodgingBtn){ openLodgingModal(null, addLodgingBtn.dataset.addLodging); return; }
+      var editLodgingBtn = t.closest("[data-edit-lodging]");
+      if (editLodgingBtn){ openLodgingModal(editLodgingBtn.dataset.editLodging); return; }
+      var delLodgingBtn = t.closest("[data-del-lodging]");
+      if (delLodgingBtn){ deleteLodgingItem(delLodgingBtn.dataset.delLodging); return; }
+      if (t.closest("#add-expense")){ openExpenseModal(); return; }
+      if (t.closest("#math-help-open")){ openMathHelpModal(); return; }
+      var editExp = t.closest("[data-editexp]");
+      if (editExp){ openExpenseModal(editExp.dataset.editexp); return; }
+      var delExp = t.closest("[data-delexp]");
+      if (delExp){ deleteExpense(delExp.dataset.delexp); return; }
+      var settleBtn = t.closest("[data-settle-exp]");
+      if (settleBtn){ toggleSettled(settleBtn.dataset.settleExp, settleBtn.dataset.settlePerson); return; }
+      var markPaid = t.closest("[data-mark-paid-from]");
+      if (markPaid){
+        recordSettlementPayment(markPaid.dataset.markPaidFrom, markPaid.dataset.markPaidTo, parseInt(markPaid.dataset.markPaidAmt, 10));
+        return;
+      }
+      var undoPayment = t.closest("[data-undo-payment]");
+      if (undoPayment){ deleteSettlementPayment(undoPayment.dataset.undoPayment); return; }
+      var balanceToggle = t.closest("[data-balance-toggle]");
+      if (balanceToggle){
+        var bid = balanceToggle.dataset.balanceToggle;
+        expandedBalances[bid] = !expandedBalances[bid];
+        renderBudget();
+        return;
+      }
+      var settleflowToggle = t.closest("[data-settleflow-toggle]");
+      if (settleflowToggle){
+        var sfid = settleflowToggle.dataset.settleflowToggle;
+        expandedBalances[sfid] = !expandedBalances[sfid];
+        renderBudget();
+        return;
+      }
+      var commentToggle = t.closest("[data-comment-toggle]");
+      if (commentToggle){
+        var cid = commentToggle.dataset.commentToggle;
+        expandedComments[cid] = !expandedComments[cid];
+        renderAll();
+        return;
+      }
+      var commentAdd = t.closest("[data-comment-add]");
+      if (commentAdd){
+        var addInput = document.querySelector('[data-comment-input="' + commentAdd.dataset.commentAdd + '"]');
+        addComment(commentAdd.dataset.commentAdd, addInput ? addInput.value : "");
+        return;
+      }
+      var commentDel = t.closest("[data-comment-del]");
+      if (commentDel){ deleteComment(commentDel.dataset.commentDel, commentDel.dataset.commentId); return; }
+      var addFlightBtn = t.closest("[data-add-flight]");
+      if (addFlightBtn){ openFlightModal(null, addFlightBtn.dataset.addFlight); return; }
+      var editFlight = t.closest("[data-edit-flight]");
+      if (editFlight){ openFlightModal(editFlight.dataset.editFlight); return; }
+      var delFlight = t.closest("[data-del-flight]");
+      if (delFlight){ deleteFlight(delFlight.dataset.delFlight); return; }
+      if (t.closest("[data-add-day]")){ openDayModal(); return; }
+      var editDay = t.closest("[data-edit-day]");
+      if (editDay){ openDayModal(editDay.dataset.editDay); return; }
+      var delDay = t.closest("[data-del-day]");
+      if (delDay){ deleteDay(delDay.dataset.delDay); return; }
+      var addMoment = t.closest("[data-add-moment]");
+      if (addMoment){ openMomentModal(addMoment.dataset.addMoment); return; }
+      var editMoment = t.closest("[data-edit-moment]");
+      if (editMoment){ openMomentModal(editMoment.dataset.momentDay, editMoment.dataset.editMoment); return; }
+      var delMoment = t.closest("[data-del-moment]");
+      if (delMoment){ deleteMoment(delMoment.dataset.momentDay, delMoment.dataset.delMoment); return; }
+    });
+    document.querySelector("main").addEventListener("keydown", function(e){
+      if (e.key === "Enter" && e.target.matches && e.target.matches("[data-comment-input]")){
+        addComment(e.target.dataset.commentInput, e.target.value);
+      }
+    });
+  }
+
+  main_drag_delegate();
+  function main_drag_delegate(){
+    var mainEl = document.querySelector("main");
+    var dragState = null;
+
+    function clearDragOver(){
+      var prev = mainEl.querySelector(".drag-over");
+      if (prev) prev.classList.remove("drag-over");
+    }
+
+    mainEl.addEventListener("dragstart", function(e){
+      var card = e.target.closest("[data-drag-id]");
+      if (!card) return;
+      if (isGuest()){ e.preventDefault(); blockIfGuest(); return; }
+      var listKey = cardListKey(card);
+      dragState = { listKey: listKey, id: card.dataset.dragId };
+      if (e.dataTransfer){
+        e.dataTransfer.effectAllowed = "move";
+        try { e.dataTransfer.setData("text/plain", card.dataset.dragId); } catch(err){}
+      }
+      card.classList.add("dragging");
+    });
+
+    mainEl.addEventListener("dragend", function(e){
+      var card = e.target.closest("[data-drag-id]");
+      if (card) card.classList.remove("dragging");
+      clearDragOver();
+      dragState = null;
+    });
+
+    mainEl.addEventListener("dragover", function(e){
+      if (!dragState) return;
+      var card = e.target.closest("[data-drag-id]");
+      if (!card || cardListKey(card) !== dragState.listKey) return;
+      e.preventDefault();
+      if (card.dataset.dragId === dragState.id) return;
+      clearDragOver();
+      card.classList.add("drag-over");
+    });
+
+    mainEl.addEventListener("drop", function(e){
+      if (!dragState) return;
+      var card = e.target.closest("[data-drag-id]");
+      clearDragOver();
+      if (!card || card.dataset.dragId === dragState.id){ dragState = null; return; }
+      e.preventDefault();
+      var listKey = dragState.listKey;
+      var draggedId = dragState.id;
+      dragState = null;
+      var list = state[listKey];
+      var fromIdx = list.findIndex(function(i){ return i.id === draggedId; });
+      if (fromIdx === -1) return;
+      var rect = card.getBoundingClientRect();
+      var after = (e.clientY - rect.top) > rect.height / 2;
+      var moved = list.splice(fromIdx, 1)[0];
+      var targetIdx = list.findIndex(function(i){ return i.id === card.dataset.dragId; });
+      if (targetIdx === -1) targetIdx = list.length;
+      list.splice(after ? targetIdx + 1 : targetIdx, 0, moved);
+      logActivity("reordered " + listKey);
+      scheduleSave();
+    });
+  }
+
+  main_flight_drag_delegate();
+  function main_flight_drag_delegate(){
+    var mainEl = document.querySelector("main");
+    var dragState = null;
+
+    function clearDragOver(){
+      var prev = mainEl.querySelector("[data-flight-drag-id].drag-over");
+      if (prev) prev.classList.remove("drag-over");
+    }
+
+    mainEl.addEventListener("dragstart", function(e){
+      var card = e.target.closest("[data-flight-drag-id]");
+      if (!card) return;
+      if (isGuest()){ e.preventDefault(); blockIfGuest(); return; }
+      var flight = state.flights.find(function(f){ return f.id === card.dataset.flightDragId; });
+      if (!flight) return;
+      dragState = { id: flight.id, direction: flight.direction || "departing" };
+      if (e.dataTransfer){
+        e.dataTransfer.effectAllowed = "move";
+        try { e.dataTransfer.setData("text/plain", flight.id); } catch(err){}
+      }
+      card.classList.add("dragging");
+    });
+
+    mainEl.addEventListener("dragend", function(e){
+      var card = e.target.closest("[data-flight-drag-id]");
+      if (card) card.classList.remove("dragging");
+      clearDragOver();
+      dragState = null;
+    });
+
+    mainEl.addEventListener("dragover", function(e){
+      if (!dragState) return;
+      var card = e.target.closest("[data-flight-drag-id]");
+      if (!card) return;
+      var targetFlight = state.flights.find(function(f){ return f.id === card.dataset.flightDragId; });
+      if (!targetFlight || (targetFlight.direction || "departing") !== dragState.direction) return;
+      e.preventDefault();
+      if (card.dataset.flightDragId === dragState.id) return;
+      clearDragOver();
+      card.classList.add("drag-over");
+    });
+
+    mainEl.addEventListener("drop", function(e){
+      if (!dragState) return;
+      var card = e.target.closest("[data-flight-drag-id]");
+      clearDragOver();
+      if (!card || card.dataset.flightDragId === dragState.id){ dragState = null; return; }
+      var targetFlight = state.flights.find(function(f){ return f.id === card.dataset.flightDragId; });
+      if (!targetFlight || (targetFlight.direction || "departing") !== dragState.direction){ dragState = null; return; }
+      e.preventDefault();
+      var direction = dragState.direction;
+      var draggedId = dragState.id;
+      dragState = null;
+      var group = flightsInDirection(direction);
+      var others = state.flights.filter(function(f){ return (f.direction || "departing") !== direction; });
+      var fromIdx = group.findIndex(function(f){ return f.id === draggedId; });
+      if (fromIdx === -1) return;
+      var rect = card.getBoundingClientRect();
+      var after = (e.clientY - rect.top) > rect.height / 2;
+      var moved = group.splice(fromIdx, 1)[0];
+      var targetIdx = group.findIndex(function(f){ return f.id === card.dataset.flightDragId; });
+      if (targetIdx === -1) targetIdx = group.length;
+      group.splice(after ? targetIdx + 1 : targetIdx, 0, moved);
+      state.flights = others.concat(group);
+      logActivity("reordered " + direction + " flights");
+      scheduleSave();
+    });
+  }
+
+  // ---------- boot ----------
+
+  function backfillState(){
+    // Firebase Realtime Database silently omits any field that's an empty
+    // array/object when it's written, so every field we treat as always
+    // being an array/object needs to be restored here if it's missing.
+    if (!state.trip) state.trip = JSON.parse(JSON.stringify(DEFAULT_STATE.trip));
+    if (!state.trip.startDate) state.trip.startDate = DEFAULT_STATE.trip.startDate;
+    if (!state.trip.endDate) state.trip.endDate = DEFAULT_STATE.trip.endDate;
+    if (!state.participants) state.participants = JSON.parse(JSON.stringify(DEFAULT_STATE.participants));
+    state.participants.forEach(function(p){
+      var r = ROSTER.find(function(x){ return x.id === p.id; });
+      if (r){
+        p.tag = r.tag;
+        p.color = r.color;
+      }
+    });
+    state.lodging = state.lodging || [];
+    state.lodging.forEach(function(item){
+      item.section = item.section || "nyc";
+      item.bookedBy = item.bookedBy || "";
+      item.paid = !!item.paid;
+      item.people = item.people || [];
+      item.comments = item.comments || [];
+    });
+    state.flights = state.flights || [];
+    state.flights.forEach(function(f){ f.people = f.people || []; f.direction = f.direction || "departing"; f.comments = f.comments || []; });
+    if (!state.itinerary) state.itinerary = [];
+    state.itinerary.forEach(function(day){
+      day.moments = day.moments || [];
+      day.moments.forEach(function(m){
+        m.block = m.block || "morning";
+        m.time = m.time || "";
+        m.location = m.location || "";
+        m.notes = m.notes || "";
+        m.status = m.status || "";
+        m.people = m.people || [];
+        m.comments = m.comments || [];
+      });
+    });
+    state.expenses = state.expenses || [];
+    state.expenses.forEach(function(e){
+      e.splitAmong = e.splitAmong || [];
+      e.settledBy = e.settledBy || [];
+      e.splitMode = e.splitMode || "equal";
+      e.splitValues = e.splitValues || {};
+      e.category = e.category || "Other";
+    });
+    if (!state.activity) state.activity = [];
+    if (!state.featureRequests) state.featureRequests = [];
+    state.featureRequests.forEach(function(r){ r.votes = r.votes || []; });
+    if (!state.chat) state.chat = [];
+    if (!state.settlementLog) state.settlementLog = [];
+  }
+
+  function updateEdinburghClock(){
+    var el = document.getElementById("edinburgh-clock");
+    if (!el) return;
+    el.textContent = new Date().toLocaleTimeString("en-US", { timeZone: "Europe/London", hour: "numeric", minute: "2-digit" });
+  }
+
+  function startApp(){
+    startSync();
+    setupPresence();
+    updateEdinburghClock();
+    setInterval(updateEdinburghClock, 30000);
+  }
+
+  // ---------- password gate ----------
+  // Soft gate only (client-side, not real security) — just keeps this off
+  // search engines and randos, not a safe for anything sensitive.
+
+  var GATE_PASSWORD = "edinburgh";
+  var GATE_KEY = "scotland2026_gate_ok";
+
+  function wireGate(){
+    var gate = document.getElementById("password-gate");
+    var input = document.getElementById("gate-input");
+    var errorEl = document.getElementById("gate-error");
+    function tryEnter(){
+      var val = (input.value || "").trim().toLowerCase();
+      if (val === GATE_PASSWORD){
+        try { localStorage.setItem(GATE_KEY, "1"); } catch(e){}
+        gate.classList.add("hidden");
+      } else {
+        errorEl.classList.remove("hidden");
+        input.value = "";
+        input.focus();
+      }
+    }
+    document.getElementById("gate-submit").onclick = tryEnter;
+    input.addEventListener("keydown", function(e){ if (e.key === "Enter") tryEnter(); });
+    input.focus();
+  }
+
+  (function checkGate(){
+    var ok = false;
+    try { ok = localStorage.getItem(GATE_KEY) === "1"; } catch(e){}
+    if (ok){
+      document.getElementById("password-gate").classList.add("hidden");
+    } else {
+      wireGate();
+    }
+  })();
+
+  startApp();
+})();
+</script>
+</body>
+</html>
