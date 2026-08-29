@@ -70,6 +70,32 @@
   .brand{display:flex; align-items:center; gap:10px;}
   .brand .mark{flex:none;}
 
+  .trip-switcher{position:relative;}
+  .trip-switcher-trigger{
+    display:flex; align-items:center; gap:8px; background:none; border:1px solid transparent; border-radius:8px;
+    padding:6px 10px; margin:-6px -10px; cursor:pointer; font:inherit; text-align:left; color:inherit;
+    transition:background .12s ease, border-color .12s ease;
+  }
+  .trip-switcher-trigger:hover, .trip-switcher-trigger.open{
+    background:var(--surface); border-color:var(--border); box-shadow:0 12px 30px rgba(0,0,0,.25);
+  }
+  .trip-switcher-titles{min-width:0;}
+  .trip-switcher-caret{color:var(--text-muted); font-size:12px; transition:transform .15s ease; flex:none;}
+  .trip-switcher-trigger.open .trip-switcher-caret{transform:rotate(180deg);}
+  .trip-switcher-menu{
+    position:absolute; top:100%; left:0; margin-top:8px; background:var(--surface);
+    border:1px solid var(--border); border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,.25);
+    min-width:200px; z-index:50; padding:6px;
+  }
+  .trip-switcher-menu.hidden{display:none;}
+  .trip-switcher-item{
+    display:block; padding:8px 10px; border-radius:5px; text-decoration:none;
+    font-size:13.5px; font-family:var(--font-ui); font-weight:600; color:var(--text);
+  }
+  .trip-switcher-item:hover{background:var(--surface-2);}
+  .trip-switcher-item.current{color:var(--text-muted); cursor:default;}
+  .trip-switcher-item.current:hover{background:none;}
+
   .scotland-clock{
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
     padding:6px 20px; border:1px solid var(--border); border-radius:8px; background:var(--surface-2);
@@ -548,9 +574,15 @@
     <svg class="mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
       <path d="M2 26 Q16 6 30 26 Z" fill="var(--accent)"/>
     </svg>
-    <div>
-      <h1 id="trip-name">Scotland 2026</h1>
-      <div class="sub" id="trip-sub">Group planner</div>
+    <div class="trip-switcher">
+      <button type="button" class="trip-switcher-trigger" id="trip-switcher-btn" title="Switch trip planner">
+        <div class="trip-switcher-titles">
+          <h1 id="trip-name">Scotland 2026</h1>
+          <div class="sub" id="trip-sub">Group planner</div>
+        </div>
+        <span class="trip-switcher-caret">▾</span>
+      </button>
+      <div class="trip-switcher-menu hidden" id="trip-switcher-menu"></div>
     </div>
   </div>
   <div class="scotland-clock" title="Current time in Scotland">
@@ -606,6 +638,12 @@
 <script>
 (function(){
   "use strict";
+
+  var CURRENT_TRIP_SITE = "Scotland 2026";
+  var TRIP_SITES = [
+    { name: "Scotland 2026", url: "https://scotland.tjvining.com" },
+    { name: "Ski Trip 2027", url: "https://skitrip.tjvining.com" }
+  ];
 
   var ROSTER = [
     { id:"tj", name:"Tj", coupleId:"c1", tag:"Tj", color:"#e0554f" },
@@ -2907,6 +2945,31 @@
     if (host) return host.dataset.list;
     var panel = el.closest(".panel");
     return panel ? panel.id.replace("panel-", "") : null;
+  }
+
+  initTripSwitcher();
+  function initTripSwitcher(){
+    var btn = document.getElementById("trip-switcher-btn");
+    var menu = document.getElementById("trip-switcher-menu");
+    if (!btn || !menu) return;
+    menu.innerHTML = TRIP_SITES.map(function(site){
+      if (site.name === CURRENT_TRIP_SITE){
+        return '<span class="trip-switcher-item current">' + escapeHtml(site.name) + ' (this one)</span>';
+      }
+      return '<a class="trip-switcher-item" href="' + escapeAttr(site.url) + '">' + escapeHtml(site.name) + '</a>';
+    }).join("");
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var willShow = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      btn.classList.toggle("open", willShow);
+    });
+    document.addEventListener("click", function(e){
+      if (menu.classList.contains("hidden")) return;
+      if (menu.contains(e.target) || btn.contains(e.target)) return;
+      menu.classList.add("hidden");
+      btn.classList.remove("open");
+    });
   }
 
   main_click_delegate();
