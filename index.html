@@ -1114,9 +1114,12 @@
   }
 
   function renderLodgingCard(item){
-    var hasPhoto = !!item.url;
+    var photoSrc = item.photoUrl || (item.url ? linkPreviewImg(item.url) : "");
+    var hasPhoto = !!photoSrc;
     var photoHtml = hasPhoto
-      ? '<a href="' + escapeAttr(item.url) + '" target="_blank" rel="noopener"><img class="lodging-photo" src="' + escapeAttr(linkPreviewImg(item.url)) + '" alt="" loading="lazy" onerror="this.remove()"></a>'
+      ? (item.url
+          ? '<a href="' + escapeAttr(item.url) + '" target="_blank" rel="noopener"><img class="lodging-photo" src="' + escapeAttr(photoSrc) + '" alt="" loading="lazy" onerror="this.remove()"></a>'
+          : '<img class="lodging-photo" src="' + escapeAttr(photoSrc) + '" alt="" loading="lazy" onerror="this.remove()">')
       : "";
     var bookedHtml = item.bookedBy
       ? '<span class="lodging-status lodging-status-good">✓ Booked by ' + escapeHtml(participantName(item.bookedBy)) + '</span>'
@@ -1203,6 +1206,7 @@
         '<div class="field"><label>Leg of the trip</label><select id="lg-section">' + lodgingSectionOptionsHtml(existing ? existing.section : (presetSection || "nyc")) + '</select></div>' +
         '<div class="field"><label>Name</label><input type="text" id="lg-name" value="' + escapeAttr(existing ? existing.name || "" : "") + '" placeholder="e.g. Old Town flat"></div>' +
         '<div class="field"><label>Listing link</label><input type="url" id="lg-url" value="' + escapeAttr(existing ? existing.url || "" : "") + '"></div>' +
+        '<div class="field"><label>Photo URL (optional)</label><input type="url" id="lg-photo-url" value="' + escapeAttr(existing ? existing.photoUrl || "" : "") + '" placeholder="paste a direct image link — Airbnb/Booking auto-previews are often generic"></div>' +
         '<div class="grid2">' +
           '<div class="field"><label>Price per person</label><input type="text" id="lg-price" value="' + escapeAttr(priceVal) + '" placeholder="e.g. 120"></div>' +
           '<div class="field"><label>Booked by</label><select id="lg-booked-by">' + lodgingBookedByOptionsHtml(existing ? existing.bookedBy : "") + '</select></div>' +
@@ -1226,6 +1230,7 @@
       var section = document.getElementById("lg-section").value;
       var name = document.getElementById("lg-name").value.trim();
       var url = document.getElementById("lg-url").value.trim();
+      var photoUrl = document.getElementById("lg-photo-url").value.trim();
       var priceCents = dollarsToCents(document.getElementById("lg-price").value);
       var bookedBy = document.getElementById("lg-booked-by").value;
       var paid = document.getElementById("lg-paid").value === "1";
@@ -1235,11 +1240,11 @@
         .map(function(b){ return b.dataset.lodgingPerson; });
       if (!name) return;
       if (existing){
-        existing.section = section; existing.name = name; existing.url = url;
+        existing.section = section; existing.name = name; existing.url = url; existing.photoUrl = photoUrl;
         existing.priceCents = priceCents; existing.bookedBy = bookedBy; existing.paid = paid; existing.notes = notes; existing.people = people;
         logActivity('edited "' + name + '" in lodging');
       } else {
-        state.lodging.push({ id: uid("lodging"), section: section, name: name, url: url, priceCents: priceCents, bookedBy: bookedBy, paid: paid, notes: notes, people: people, comments: [] });
+        state.lodging.push({ id: uid("lodging"), section: section, name: name, url: url, photoUrl: photoUrl, priceCents: priceCents, bookedBy: bookedBy, paid: paid, notes: notes, people: people, comments: [] });
         logActivity('added "' + name + '" to lodging', "join");
       }
       root.innerHTML = "";
@@ -3424,6 +3429,7 @@
     state.lodging = state.lodging || [];
     state.lodging.forEach(function(item){
       item.section = item.section || "nyc";
+      item.photoUrl = item.photoUrl || "";
       item.bookedBy = item.bookedBy || "";
       item.paid = !!item.paid;
       item.people = item.people || [];
