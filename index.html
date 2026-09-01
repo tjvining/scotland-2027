@@ -502,6 +502,19 @@
 
   .card-link{display:block; text-decoration:none; color:inherit; cursor:pointer; transition:border-color .12s ease;}
   .card-link:hover{border-color:var(--accent);}
+
+  .weather-leg{padding:0; overflow:hidden;}
+  .weather-day-row{display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid var(--border); text-decoration:none; color:inherit; transition:background .12s ease;}
+  .weather-day-row:last-child{border-bottom:none;}
+  .weather-day-row:hover{background:var(--surface-2);}
+  .weather-day-date{flex:none; min-width:38px; text-align:center;}
+  .weather-day-weekday{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted);}
+  .weather-day-daynum{font-family:var(--font-head); font-weight:700; font-size:15px;}
+  .weather-day-icon{font-size:22px; flex:none; width:28px; text-align:center;}
+  .weather-day-body{flex:1; min-width:0;}
+  .weather-day-temp{font-family:var(--font-mono); font-weight:600; font-size:14px;}
+  .weather-day-detail{color:var(--text-muted); font-size:12px; margin-top:1px;}
+  .weather-day-arrow{flex:none; color:var(--text-muted); font-size:13px;}
   .trip-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); row-gap:2px; column-gap:0; margin-top:6px;}
   .trip-cal-day{
     height:20px; margin-right:2px; border-radius:3px;
@@ -625,6 +638,7 @@
 
 <nav class="tabs" id="tabs">
   <button data-tab="overview" class="active" draggable="true" title="Drag to reorder tabs">🏰 Overview</button>
+  <button data-tab="weather" draggable="true" title="Drag to reorder tabs">⛅ Weather</button>
   <button data-tab="lodging" draggable="true" title="Drag to reorder tabs">🏠 Lodging</button>
   <button data-tab="flights" draggable="true" title="Drag to reorder tabs">✈️ Flights</button>
   <button data-tab="itinerary" draggable="true" title="Drag to reorder tabs">🗒️ Itinerary</button>
@@ -634,6 +648,7 @@
 <main>
   <div id="sync-banner" class="banner hidden"></div>
   <div class="panel active" id="panel-overview"><div class="empty">Loading trip data…</div></div>
+  <div class="panel" id="panel-weather"></div>
   <div class="panel" id="panel-lodging"></div>
   <div class="panel" id="panel-flights"></div>
   <div class="panel" id="panel-itinerary"></div>
@@ -2287,6 +2302,33 @@
     return TRIP_DAY_LOCATIONS[todayIso] || null;
   }
 
+  function tripDayList(){
+    if (!state.trip.startDate || !state.trip.endDate) return [];
+    var start = new Date(state.trip.startDate + "T00:00:00");
+    var end = new Date(state.trip.endDate + "T00:00:00");
+    var days = [];
+    var cursor = new Date(start);
+    while (cursor <= end){
+      var iso = isoDate(cursor.getFullYear(), cursor.getMonth(), cursor.getDate());
+      days.push({ iso: iso, loc: TRIP_DAY_LOCATIONS[iso] || null });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return days;
+  }
+
+  function tripLegs(){
+    var legs = [];
+    tripDayList().forEach(function(day){
+      var last = legs[legs.length - 1];
+      if (last && last.loc === day.loc){
+        last.days.push(day.iso);
+      } else {
+        legs.push({ loc: day.loc, days: [day.iso] });
+      }
+    });
+    return legs;
+  }
+
   var weatherCache = {};
 
   function weatherIcon(code){
@@ -2345,15 +2387,50 @@
     var locKey = currentTripLocationKey();
     if (!locKey) return "";
     var city = TRIP_LOCATION_CITY[locKey];
-    var weatherUrl = "https://www.google.com/search?q=" + encodeURIComponent("weather in " + city);
-    return '<a class="card card-link" id="weather-card" data-weather-city="' + escapeAttr(city) + '" href="' + escapeAttr(weatherUrl) + '" target="_blank" rel="noopener">' +
+    return '<div class="card card-link" data-tab="weather" id="weather-card" data-weather-city="' + escapeAttr(city) + '">' +
       '<div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Weather in ' + escapeHtml(city) + ' →</div>' +
       '<div style="display:flex;align-items:center;gap:10px;">' +
         '<span style="font-size:26px;line-height:1;" id="weather-icon">⋯</span>' +
         '<span class="mono" style="font-size:16px;font-weight:600;" id="weather-temp">--°/--°</span>' +
       '</div>' +
       '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;" id="weather-detail">Loading…</div>' +
-    '</a>';
+    '</div>';
+  }
+
+  function googleWeatherUrl(city, iso){
+    return "https://www.google.com/search?q=" + encodeURIComponent("weather in " + city + " on " + fmtDayHeading(iso));
+  }
+
+  var weatherRangeCache = {};
+
+  function fetchCityRangeForecast(city, startIso, endIso){
+    var cacheKey = city + "|" + startIso + "|" + endIso;
+    if (weatherRangeCache[cacheKey]) return Promise.resolve(weatherRangeCache[cacheKey]);
+    var geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&name=" + encodeURIComponent(city);
+    return fetch(geoUrl).then(function(r){ return r.json(); }).then(function(geo){
+      var place = geo && geo.results && geo.results[0];
+      if (!place) throw new Error("no location found");
+      var wxUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + place.latitude + "&longitude=" + place.longitude +
+        "&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max,windspeed_10m_max&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=auto&start_date=" + startIso + "&end_date=" + endIso;
+      return fetch(wxUrl).then(function(r){ return r.json(); }).then(function(wx){
+        var byDate = {};
+        if (wx.daily && wx.daily.time){
+          wx.daily.time.forEach(function(iso, i){
+            var code = wx.daily.weathercode[i];
+            byDate[iso] = {
+              high: Math.round(wx.daily.temperature_2m_max[i]),
+              low: Math.round(wx.daily.temperature_2m_min[i]),
+              icon: weatherIcon(code),
+              label: weatherLabel(code),
+              precip: Math.round(wx.daily.precipitation_probability_max[i]),
+              wind: Math.round(wx.daily.windspeed_10m_max[i])
+            };
+          });
+        }
+        weatherRangeCache[cacheKey] = byDate;
+        return byDate;
+      });
+    });
   }
 
   function loadOverviewWeather(){
@@ -2370,6 +2447,67 @@
       document.getElementById("weather-icon").textContent = "—";
       document.getElementById("weather-temp").textContent = "";
       document.getElementById("weather-detail").textContent = "Couldn't load weather";
+    });
+  }
+
+  function renderWeather(){
+    var legs = tripLegs().filter(function(leg){ return leg.loc; });
+    var html = '<div class="section-head"><div><h2>Weather</h2><p>Forecast for each stop on the trip — tap a day for the full Google forecast.</p></div></div>';
+    if (!legs.length){
+      html += '<div class="empty">Set the trip dates to see a forecast.</div>';
+      document.getElementById("panel-weather").innerHTML = html;
+      return;
+    }
+    html += legs.map(function(leg){
+      var city = TRIP_LOCATION_CITY[leg.loc];
+      var color = TRIP_LOCATION_COLORS[leg.loc];
+      var rangeLabel = leg.days.length > 1 ? (fmtDateShort(leg.days[0]) + "–" + fmtDateShort(leg.days[leg.days.length - 1])) : fmtDateShort(leg.days[0]);
+      var rowsHtml = leg.days.map(function(iso){
+        var d = new Date(iso + "T00:00:00");
+        var weekday = d.toLocaleDateString(undefined, { weekday: "short" });
+        return '<a class="weather-day-row" href="' + escapeAttr(googleWeatherUrl(city, iso)) + '" target="_blank" rel="noopener">' +
+          '<div class="weather-day-date"><div class="weather-day-weekday">' + weekday + '</div><div class="weather-day-daynum">' + d.getDate() + '</div></div>' +
+          '<span class="weather-day-icon" id="wx-icon-' + iso + '">⋯</span>' +
+          '<div class="weather-day-body"><div class="weather-day-temp" id="wx-temp-' + iso + '">--°/--°</div><div class="weather-day-detail" id="wx-detail-' + iso + '">Loading…</div></div>' +
+          '<span class="weather-day-arrow">↗</span>' +
+        '</a>';
+      }).join("");
+      return '<div class="card day-card weather-leg" style="border-left-color:' + color + ';">' +
+        '<div class="day-head"><div class="day-title-wrap"><div class="day-title">' + escapeHtml(city) + '</div><div class="day-subtitle">' + rangeLabel + '</div></div></div>' +
+        '<div class="moments-list">' + rowsHtml + '</div>' +
+      '</div>';
+    }).join("");
+    document.getElementById("panel-weather").innerHTML = html;
+    loadWeatherTabForecasts(legs);
+  }
+
+  function loadWeatherTabForecasts(legs){
+    legs.forEach(function(leg){
+      var city = TRIP_LOCATION_CITY[leg.loc];
+      fetchCityRangeForecast(city, leg.days[0], leg.days[leg.days.length - 1]).then(function(byDate){
+        leg.days.forEach(function(iso){
+          var iconEl = document.getElementById("wx-icon-" + iso);
+          if (!iconEl) return;
+          var wx = byDate[iso];
+          if (wx){
+            iconEl.textContent = wx.icon;
+            document.getElementById("wx-temp-" + iso).textContent = wx.high + "°/" + wx.low + "°";
+            document.getElementById("wx-detail-" + iso).textContent = wx.label + " · " + wx.precip + "% rain · " + wx.wind + " mph wind";
+          } else {
+            iconEl.textContent = "🗓️";
+            document.getElementById("wx-temp-" + iso).textContent = "";
+            document.getElementById("wx-detail-" + iso).textContent = "Forecast opens closer to the date";
+          }
+        });
+      }).catch(function(){
+        leg.days.forEach(function(iso){
+          var iconEl = document.getElementById("wx-icon-" + iso);
+          if (!iconEl) return;
+          iconEl.textContent = "—";
+          document.getElementById("wx-temp-" + iso).textContent = "";
+          document.getElementById("wx-detail-" + iso).textContent = "Couldn't load forecast";
+        });
+      });
     });
   }
 
@@ -3016,6 +3154,7 @@
 
   function renderAll(){
     renderOverview();
+    renderWeather();
     renderLodging();
     renderFlights();
     renderItinerary();
