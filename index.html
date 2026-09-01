@@ -65,10 +65,11 @@
   .mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums;}
   a{color:var(--accent);}
 
+  .app-header{position:sticky; top:0; z-index:10;}
   .topbar{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     padding:16px 20px; border-bottom:1px solid var(--border); background:var(--surface);
-    position:sticky; top:0; z-index:10; flex-wrap:wrap;
+    flex-wrap:wrap;
   }
   .topbar h1{font-size:26px; font-style:italic; font-weight:600;}
   .topbar .sub{color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.12em; font-family:var(--font-ui); font-weight:600;}
@@ -242,7 +243,7 @@
   .btn:disabled{opacity:.5; cursor:default;}
 
   .row-actions{display:flex; gap:6px; flex:none;}
-  .icon-only{background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; padding:4px 6px;}
+  .icon-only{background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; padding:4px 6px; display:inline-flex; align-items:center; justify-content:center;}
   .icon-only:hover{color:var(--bad);}
 
   label{display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-ui);}
@@ -608,6 +609,7 @@
   </svg>
 </div>
 
+<div class="app-header">
 <div class="topbar">
   <div class="brand">
     <svg class="mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -644,6 +646,7 @@
   <button data-tab="itinerary" draggable="true" title="Drag to reorder tabs">🗒️ Itinerary</button>
   <button data-tab="budget" draggable="true" title="Drag to reorder tabs">💸 Expenses</button>
 </nav>
+</div>
 
 <main>
   <div id="sync-banner" class="banner hidden"></div>
@@ -679,6 +682,11 @@
 <script>
 (function(){
   "use strict";
+
+  // A real outline icon (not an emoji) so the delete affordance can inherit
+  // .icon-only's hover color the same way the ✎ edit glyph does — emoji
+  // render as fixed-color glyphs and ignore `color` entirely.
+  var TRASH_ICON_SVG = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:block;"><path d="M2.5 4.5h11M6.5 4.5V2.75a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75V4.5M6.75 7.5v4.25M9.25 7.5v4.25M3.5 4.5l.65 8.4a1 1 0 0 0 1 .93h5.7a1 1 0 0 0 1-.93l.65-8.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   var CURRENT_TRIP_SITE = "Scotland 2026";
   var TRIP_SITES = [
@@ -970,17 +978,69 @@
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
-  function logActivity(text, type){
+  // `restoreInfo` is optional: { kind, data, label, parentId }. When present,
+  // the activity feed renders a Restore button next to this entry that can
+  // put the deleted item back — no separate "recently deleted" list needed,
+  // the activity log already shows every delete with who/when.
+  function logActivity(text, type, restoreInfo){
     var m = me();
     if (m) m.lastSeenTs = Date.now();
-    state.activity.unshift({
+    var entry = {
       id: uid("act"),
       ts: Date.now(),
       who: m ? m.name : "Someone",
       text: text,
       type: type || "default"
-    });
+    };
+    if (restoreInfo){
+      entry.restore = {
+        kind: restoreInfo.kind,
+        label: restoreInfo.label,
+        parentId: restoreInfo.parentId || null,
+        data: JSON.parse(JSON.stringify(restoreInfo.data))
+      };
+    }
+    state.activity.unshift(entry);
     if (state.activity.length > 200) state.activity.length = 200;
+  }
+
+  function restoreDeleted(activityId){
+    if (blockIfGuest()) return;
+    var entry = (state.activity || []).find(function(a){ return a.id === activityId; });
+    if (!entry || !entry.restore) return;
+    var r = entry.restore;
+    var data = r.data;
+    var restored = true;
+    if (r.kind === "lodging"){
+      state.lodging.push(data);
+    } else if (r.kind === "flight"){
+      state.flights.push(data);
+    } else if (r.kind === "expense"){
+      state.expenses.push(data);
+    } else if (r.kind === "feature"){
+      if (!state.featureRequests) state.featureRequests = [];
+      state.featureRequests.push(data);
+    } else if (r.kind === "settlement"){
+      if (!state.settlementLog) state.settlementLog = [];
+      state.settlementLog.push(data);
+    } else if (r.kind === "day"){
+      state.itinerary.push(data);
+    } else if (r.kind === "moment"){
+      var day = state.itinerary.find(function(d){ return d.id === r.parentId; });
+      if (day){ day.moments = day.moments || []; day.moments.push(data); } else { restored = false; }
+    } else if (r.kind === "comment"){
+      var found = findCommentableItem(r.parentId);
+      if (found){ found.item.comments = found.item.comments || []; found.item.comments.push(data); } else { restored = false; }
+    } else {
+      restored = false;
+    }
+    if (!restored){
+      showBanner("Couldn't restore that — the place it belongs to was also removed.");
+      return;
+    }
+    delete entry.restore;
+    logActivity('restored "' + r.label + '"', "join");
+    scheduleSave();
   }
 
   function relTime(ts){
@@ -1164,7 +1224,7 @@
         avatarsHtml +
         '<div class="row-actions" style="margin-top:8px;">' +
           '<button class="icon-only" data-edit-lodging="' + item.id + '" title="Edit">✎</button>' +
-          '<button class="icon-only" data-del-lodging="' + item.id + '" title="Remove">✕</button>' +
+          '<button class="icon-only" data-del-lodging="' + item.id + '" title="Delete">' + TRASH_ICON_SVG + '</button>' +
         '</div>' +
         '<div class="comment-zone">' + renderComments(item) + '</div>' +
       '</div>' +
@@ -1271,9 +1331,10 @@
     if (blockIfGuest()) return;
     var idx = state.lodging.findIndex(function(l){ return l.id === id; });
     if (idx === -1) return;
-    var name = state.lodging[idx].name;
+    var item = state.lodging[idx];
+    var name = item.name;
     state.lodging.splice(idx, 1);
-    logActivity('removed "' + name + '" from lodging', "remove");
+    logActivity('removed "' + name + '" from lodging', "remove", { kind: "lodging", data: item, label: name || "a lodging option" });
     scheduleSave();
   }
 
@@ -1598,9 +1659,10 @@
     if (blockIfGuest()) return;
     var idx = state.expenses.findIndex(function(e){ return e.id === id; });
     if (idx === -1) return;
-    var desc = state.expenses[idx].description;
+    var exp = state.expenses[idx];
+    var desc = exp.description;
     state.expenses.splice(idx, 1);
-    logActivity('deleted expense "' + desc + '"', "remove");
+    logActivity('deleted expense "' + desc + '"', "remove", { kind: "expense", data: exp, label: desc || "an expense" });
     scheduleSave();
   }
 
@@ -1636,7 +1698,8 @@
     if (idx === -1) return;
     var p = state.settlementLog[idx];
     state.settlementLog.splice(idx, 1);
-    logActivity("undid " + participantName(p.from) + " → " + participantName(p.to) + " " + fmtCents(p.amountCents), "remove");
+    var settlementLabel = participantName(p.from) + " → " + participantName(p.to) + " " + fmtCents(p.amountCents);
+    logActivity("undid " + settlementLabel, "remove", { kind: "settlement", data: p, label: settlementLabel });
     scheduleSave();
   }
 
@@ -1693,7 +1756,10 @@
     if (!found || !found.item.comments) return;
     var idx = found.item.comments.findIndex(function(c){ return c.id === commentId; });
     if (idx === -1) return;
+    var c = found.item.comments[idx];
     found.item.comments.splice(idx, 1);
+    var commentLabel = truncateText(c.text || "", 60) || "a comment";
+    logActivity('deleted a comment on "' + commentableItemLabel(found) + '"', "remove", { kind: "comment", data: c, parentId: itemId, label: commentLabel });
     scheduleSave();
   }
 
@@ -1710,7 +1776,7 @@
           '<div class="comment-body"><span class="comment-who">' + escapeHtml(participantName(c.personId)) + '</span>' +
           '<span class="comment-when mono">' + relTime(c.ts) + '</span>' +
           '<div>' + escapeHtml(c.text) + '</div></div>' +
-          '<button class="icon-only" data-comment-del="' + item.id + '" data-comment-id="' + c.id + '" title="Delete">✕</button>' +
+          '<button class="icon-only" data-comment-del="' + item.id + '" data-comment-id="' + c.id + '" title="Delete">' + TRASH_ICON_SVG + '</button>' +
         '</div>';
       });
       html += '<div class="comment-input-row">' +
@@ -1793,7 +1859,7 @@
       '</div>' +
       '<div class="row-actions">' +
         '<button class="icon-only" data-edit-moment="' + m.id + '" data-moment-day="' + dayId + '" title="Edit">✎</button>' +
-        '<button class="icon-only" data-del-moment="' + m.id + '" data-moment-day="' + dayId + '" title="Remove">✕</button>' +
+        '<button class="icon-only" data-del-moment="' + m.id + '" data-moment-day="' + dayId + '" title="Delete">' + TRASH_ICON_SVG + '</button>' +
       '</div>' +
     '</div>';
   }
@@ -1821,7 +1887,7 @@
         '</div>' +
         '<div class="row-actions">' +
           '<button class="icon-only" data-edit-day="' + day.id + '" title="Edit day">✎</button>' +
-          '<button class="icon-only" data-del-day="' + day.id + '" title="Remove day">✕</button>' +
+          '<button class="icon-only" data-del-day="' + day.id + '" title="Delete day">' + TRASH_ICON_SVG + '</button>' +
         '</div>' +
       '</div>' +
       '<div class="moments-list">' + momentsHtml + '</div>' +
@@ -1931,7 +1997,7 @@
     var removedDay = state.itinerary[idx];
     var label = removedDay.label || fmtDayHeading(removedDay.date) || "day";
     state.itinerary.splice(idx, 1);
-    logActivity('removed "' + label + '" from itinerary', "remove");
+    logActivity('removed "' + label + '" from itinerary', "remove", { kind: "day", data: removedDay, label: label });
     scheduleSave();
   }
 
@@ -2025,9 +2091,10 @@
     if (!day) return;
     var idx = (day.moments || []).findIndex(function(m){ return m.id === momentId; });
     if (idx === -1) return;
-    var text = day.moments[idx].text;
+    var moment = day.moments[idx];
+    var text = moment.text;
     day.moments.splice(idx, 1);
-    logActivity('removed "' + momentLogLabel(text) + '" from ' + dayDisplayName(day), "remove");
+    logActivity('removed "' + momentLogLabel(text) + '" from ' + dayDisplayName(day), "remove", { kind: "moment", data: moment, parentId: dayId, label: momentLogLabel(text) || "an itinerary item" });
     scheduleSave();
   }
 
@@ -2068,7 +2135,7 @@
         '<div class="flight-people">' + whoHtml + '</div>' +
         '<div class="row-actions">' +
           '<button class="icon-only" data-edit-flight="' + f.id + '" title="Edit">✎</button>' +
-          '<button class="icon-only" data-del-flight="' + f.id + '" title="Remove">✕</button>' +
+          '<button class="icon-only" data-del-flight="' + f.id + '" title="Delete">' + TRASH_ICON_SVG + '</button>' +
         '</div>' +
       '</div>' +
       '<div class="flight-route">' + escapeHtml(route) + '</div>' +
@@ -2184,7 +2251,8 @@
     if (idx === -1) return;
     var f = state.flights[idx];
     state.flights.splice(idx, 1);
-    logActivity('removed a flight (' + (f.from || "?") + ' → ' + (f.to || "?") + ')', "remove");
+    var flightLabel = (f.from || "?") + " → " + (f.to || "?");
+    logActivity('removed a flight (' + flightLabel + ')', "remove", { kind: "flight", data: f, label: flightLabel });
     scheduleSave();
   }
 
@@ -2391,7 +2459,7 @@
       '<div class="meta" style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Weather in ' + escapeHtml(city) + ' →</div>' +
       '<div style="display:flex;align-items:center;gap:10px;">' +
         '<span style="font-size:26px;line-height:1;" id="weather-icon">⋯</span>' +
-        '<span class="mono" style="font-size:16px;font-weight:600;" id="weather-temp">--°/--°</span>' +
+        '<span class="mono" style="font-size:16px;font-weight:600;" id="weather-temp">--°/--°F</span>' +
       '</div>' +
       '<div style="color:var(--text-muted);font-size:12.5px;margin-top:2px;" id="weather-detail">Loading…</div>' +
     '</div>';
@@ -2440,7 +2508,7 @@
     fetchWeather(city).then(function(wx){
       if (!document.getElementById("weather-card") || document.getElementById("weather-card").dataset.weatherCity !== city) return;
       document.getElementById("weather-icon").textContent = wx.icon;
-      document.getElementById("weather-temp").textContent = wx.high + "°/" + wx.low + "°";
+      document.getElementById("weather-temp").textContent = wx.high + "°/" + wx.low + "°F";
       document.getElementById("weather-detail").textContent = wx.label + " · " + wx.precip + "% rain · " + wx.wind + " mph wind";
     }).catch(function(){
       if (!document.getElementById("weather-card") || document.getElementById("weather-card").dataset.weatherCity !== city) return;
@@ -2452,7 +2520,7 @@
 
   function renderWeather(){
     var legs = tripLegs().filter(function(leg){ return leg.loc; });
-    var html = '<div class="section-head"><div><h2>Weather</h2><p>Forecast for each stop on the trip — tap a day for the full Google forecast.</p></div></div>';
+    var html = '<div class="section-head"><div><h2>Weather</h2><p>Forecast for each stop on the trip, in °F — tap a day for the full Google forecast.</p></div></div>';
     if (!legs.length){
       html += '<div class="empty">Set the trip dates to see a forecast.</div>';
       document.getElementById("panel-weather").innerHTML = html;
@@ -2468,7 +2536,7 @@
         return '<a class="weather-day-row" href="' + escapeAttr(googleWeatherUrl(city, iso)) + '" target="_blank" rel="noopener">' +
           '<div class="weather-day-date"><div class="weather-day-weekday">' + weekday + '</div><div class="weather-day-daynum">' + d.getDate() + '</div></div>' +
           '<span class="weather-day-icon" id="wx-icon-' + iso + '">⋯</span>' +
-          '<div class="weather-day-body"><div class="weather-day-temp" id="wx-temp-' + iso + '">--°/--°</div><div class="weather-day-detail" id="wx-detail-' + iso + '">Loading…</div></div>' +
+          '<div class="weather-day-body"><div class="weather-day-temp" id="wx-temp-' + iso + '">--°/--°F</div><div class="weather-day-detail" id="wx-detail-' + iso + '">Loading…</div></div>' +
           '<span class="weather-day-arrow">↗</span>' +
         '</a>';
       }).join("");
@@ -2491,7 +2559,7 @@
           var wx = byDate[iso];
           if (wx){
             iconEl.textContent = wx.icon;
-            document.getElementById("wx-temp-" + iso).textContent = wx.high + "°/" + wx.low + "°";
+            document.getElementById("wx-temp-" + iso).textContent = wx.high + "°/" + wx.low + "°F";
             document.getElementById("wx-detail-" + iso).textContent = wx.label + " · " + wx.precip + "% rain · " + wx.wind + " mph wind";
           } else {
             iconEl.textContent = "🗓️";
@@ -2820,7 +2888,7 @@
           '<div class="meta"><strong>' + escapeHtml(participantName(e.paidBy)) + '</strong> paid · split ' + e.splitAmong.length + ' way' + (e.splitAmong.length===1?"":"s") + modeLabel + '</div>' +
           (owers.length ? '<div class="settle-row">' + chips + '</div>' : '') +
           '</div><div class="amt mono" style="font-weight:600;font-size:15px;min-width:80px;">' + fmtCents(e.amountCents) + '</div>' +
-          '<div class="row-actions"><button class="icon-only" data-editexp="' + e.id + '" title="Edit">✎</button><button class="icon-only" data-delexp="' + e.id + '" title="Delete">✕</button></div>' +
+          '<div class="row-actions"><button class="icon-only" data-editexp="' + e.id + '" title="Edit">✎</button><button class="icon-only" data-delexp="' + e.id + '" title="Delete">' + TRASH_ICON_SVG + '</button></div>' +
           '</div>' +
           '<div class="comment-zone">' + renderComments(e) + '</div>' +
           '</div>';
@@ -2863,7 +2931,7 @@
         '<span class="avatar" data-tip="' + escapeAttr(participantName(p.to)) + '" style="background:' + participantColor(p.to) + '">' + escapeHtml(participantTag(p.to)) + '</span>' +
         '<span class="flow-name">' + escapeHtml(participantName(p.to)) + '</span>' +
         '<span class="flow-amount mono">' + fmtCents(p.amountCents) + '</span>' +
-        '<button class="icon-only" data-undo-payment="' + p.id + '" title="Undo this">✕</button>' +
+        '<button class="icon-only" data-undo-payment="' + p.id + '" title="Delete this record">' + TRASH_ICON_SVG + '</button>' +
       '</div>';
     }).join("");
     return '<div class="card" style="margin-top:14px;"><div style="font-weight:600;font-size:13.5px;margin-bottom:10px;">✅ Recorded payments</div>' + rows + '</div>';
@@ -2876,7 +2944,9 @@
     var html = '<div class="card">';
     state.activity.forEach(function(a){
       var d = new Date(a.ts);
-      html += '<div class="activity-item"><span class="dot ' + (a.type || "default") + '"></span><span class="when">' + d.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + '</span><span><strong>' + escapeHtml(a.who) + '</strong> ' + escapeHtml(a.text) + '</span></div>';
+      html += '<div class="activity-item"><span class="dot ' + (a.type || "default") + '"></span><span class="when">' + d.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + '</span><span style="flex:1;min-width:0;"><strong>' + escapeHtml(a.who) + '</strong> ' + escapeHtml(a.text) + '</span>' +
+        (a.restore ? '<button class="btn small" data-restore-deleted="' + a.id + '">↩️ Restore</button>' : '') +
+      '</div>';
     });
     html += '</div>';
     return html;
@@ -2887,10 +2957,16 @@
     root.innerHTML =
       '<div class="modal-backdrop"><div class="modal modal-wide">' +
         '<div class="modal-head"><h3>Activity</h3><button class="icon-only" id="activity-close" title="Close">✕</button></div>' +
-        '<p>Who did what.</p>' +
+        '<p>Who did what — deletions can be restored right here.</p>' +
         activityFeedHtml() +
       '</div></div>';
     document.getElementById("activity-close").onclick = function(){ root.innerHTML = ""; };
+    Array.prototype.slice.call(root.querySelectorAll("[data-restore-deleted]")).forEach(function(btn){
+      btn.onclick = function(){
+        restoreDeleted(btn.getAttribute("data-restore-deleted"));
+        openActivityModal();
+      };
+    });
   }
 
   function addFeatureRequest(text){
@@ -2909,7 +2985,10 @@
     if (blockIfGuest()) return;
     var idx = (state.featureRequests || []).findIndex(function(r){ return r.id === id; });
     if (idx === -1) return;
+    var req = state.featureRequests[idx];
     state.featureRequests.splice(idx, 1);
+    var featureLabel = truncateText(req.text || "", 60) || "a feature request";
+    logActivity('deleted a feature request: "' + featureLabel + '"', "remove", { kind: "feature", data: req, label: featureLabel });
     scheduleSave();
   }
 
@@ -2946,7 +3025,7 @@
             '<span class="comment-when mono">' + relTime(r.ts) + '</span>' +
             '<div>' + escapeHtml(r.text) + '</div></div>' +
             '<button class="upvote-btn' + (voted ? " voted" : "") + '" data-feature-vote="' + r.id + '" title="' + (voted ? "Remove your vote" : "Upvote this") + '">▲ ' + votes.length + '</button>' +
-            '<button class="icon-only" data-feature-del="' + r.id + '" title="Delete">✕</button>' +
+            '<button class="icon-only" data-feature-del="' + r.id + '" title="Delete">' + TRASH_ICON_SVG + '</button>' +
           '</div>';
         }).join("")
       : '<div class="empty">No feature requests yet — be the first to ask for something.</div>';
