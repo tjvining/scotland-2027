@@ -215,6 +215,26 @@
   .upvote-btn:hover{border-color:var(--accent); color:var(--accent);}
   .upvote-btn.voted{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
 
+  .sight-type-badge{white-space:nowrap; font-size:13px;}
+  .sight-itin-toggle{
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text-muted); border-radius:999px;
+    padding:2px 9px; font-size:11.5px; font-weight:700; cursor:pointer; font-family:var(--font-mono);
+  }
+  .sight-itin-toggle:hover{border-color:var(--accent); color:var(--accent);}
+  .sight-itin-toggle.on{background:var(--good-bg); border-color:var(--good); color:var(--good);}
+  .sight-vote{display:flex; align-items:center; gap:6px; white-space:nowrap;}
+  .sight-vote-btn{
+    width:22px; height:22px; flex:none; border-radius:999px; border:1px solid var(--border);
+    background:var(--surface-2); color:var(--text-muted); cursor:pointer; font-weight:700; font-size:13px;
+    display:flex; align-items:center; justify-content:center; padding:0; line-height:1;
+  }
+  .sight-vote-btn:hover:not(:disabled){border-color:var(--accent); color:var(--accent);}
+  .sight-vote-btn:disabled{opacity:.35; cursor:default;}
+  .sight-vote-total{font-weight:700; font-size:12.5px; color:var(--text); min-width:26px; text-align:center;}
+  .sight-place-link{color:var(--accent); text-decoration:none; font-weight:600;}
+  .sight-place-link:hover{text-decoration:underline;}
+  .sight-place-link-icon{font-size:11px; opacity:.7;}
+
   .avatars{display:flex; margin-top:6px;}
   .avatars .avatar{margin-right:-6px; border:2px solid var(--surface); width:20px; height:20px; font-size:10px;}
 
@@ -644,6 +664,7 @@
   <button data-tab="lodging" draggable="true" title="Drag to reorder tabs">🏠 Lodging</button>
   <button data-tab="flights" draggable="true" title="Drag to reorder tabs">✈️ Flights</button>
   <button data-tab="itinerary" draggable="true" title="Drag to reorder tabs">🗒️ Itinerary</button>
+  <button data-tab="sightseeing" draggable="true" title="Drag to reorder tabs">🔭 Sightseeing</button>
   <button data-tab="budget" draggable="true" title="Drag to reorder tabs">💸 Expenses</button>
 </nav>
 </div>
@@ -655,6 +676,7 @@
   <div class="panel" id="panel-lodging"></div>
   <div class="panel" id="panel-flights"></div>
   <div class="panel" id="panel-itinerary"></div>
+  <div class="panel" id="panel-sightseeing"></div>
   <div class="panel" id="panel-budget"></div>
 </main>
 
@@ -789,6 +811,58 @@
       ]}
     ],
     expenses: [],
+    sightseeing: [
+      { id:"sight-1", type:"Site", place:"Museum of Magic", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Museum+of+Magic+Fortune-telling+and+Witchcraft%2C+2+Chalmers+Close%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-2", type:"Site", place:"Queen Mary's Bath House", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Queen+Mary%27s+Bath+House%2C+Holyrood+Park%2C+Abbeyhill%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-3", type:"Site", place:"Old Calton Cemetary", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Old+Calton+Burial+Ground%2C+Waterloo+Place%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-4", type:"Site", place:"National Museum of Scotland", onItinerary:true, votes:[], url:"https://www.google.com/maps/search/?api=1&query=National+Museum+of+Scotland%2C+Chambers+Street%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-5", type:"Site", place:"The Edinburgh Dungeon", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=The+Edinburgh+Dungeon%2C+31+Market+Street%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-6", type:"Shop", place:"Scottish Design Exchange", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Scottish+Design+Exchange%2C+117-119+George+Street%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-7", type:"Shop", place:"Eden", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Eden%2C+37+Cockburn+Street%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-8", type:"Shop", place:"Lackdhu Arts", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Lackdhu+Arts%2C+62+Candlemaker+Row%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-9", type:"Shop", place:"Red Door Gallery", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=The+Red+Door+Gallery%2C+42+Victoria+Street%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-10", type:"Shop", place:"Tron Kirk Market", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Tron+Kirk+Market%2C+122+High+Street%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-11", type:"Site", place:"Greyfriars Bobby Monument", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Greyfriars+Bobby+Statue%2C+Candlemaker+Row%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-12", type:"Site", place:"Calton Hill", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Calton+Hill%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-13", type:"Site", place:"Scott Monument", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Scott+Monument%2C+East+Princes+Street+Gardens%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-14", type:"Site", place:"Advocate's Close", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Advocate%27s+Close%2C+Royal+Mile%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-15", type:"Site", place:"Circus Lane", onItinerary:true, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Circus+Lane%2C+Stockbridge%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-16", type:"Site", place:"Edinburgh Central Library", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Edinburgh+Central+Library%2C+7-9+George+IV+Bridge%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-17", type:"Site", place:"The Gently Mad Book Shop", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=The+Gently+Mad+Book+Shop%2C+2+Summer+Place%2C+Canonmills%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-18", type:"Site", place:"Parish Church of St Cuthbert", onItinerary:true, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Parish+Church+of+St+Cuthbert%2C+5+Lothian+Road%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-19", type:"Site", place:"St Marys Episcopal Cathedral", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=St+Mary%27s+Episcopal+Cathedral%2C+23+Palmerston+Place%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-20", type:"Site", place:"Princes St Gardens", onItinerary:true, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Princes+Street+Gardens%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-21", type:"Shop", place:"Edinburgh Farmers Market", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Edinburgh+Farmers+Market%2C+Castle+Terrace%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-22", type:"Site", place:"St Cuthberts Kirkyard", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=St+Cuthbert%27s+Kirkyard%2C+5+Lothian+Road%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-23", type:"Site", place:"New Calton Burial Ground", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=New+Calton+Burial+Ground%2C+Regent+Road%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-24", type:"Site", place:"Royal Mile", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Royal+Mile%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-25", type:"Site", place:"Dean Cemetary", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Dean+Cemetery%2C+Dean+Path%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-26", type:"Site", place:"Greyfriars Kirkyard Cemetary", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Greyfriars+Kirkyard%2C+Greyfriars+Place%2C+Edinburgh+EH1+2QQ%2C+Scotland" },
+      { id:"sight-27", type:"Site", place:"Leith Walk", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Leith+Walk%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-28", type:"Site", place:"Braid Burn", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Braidburn+Valley+Park%2C+Greenbank+Crescent%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-29", type:"Site", place:"Figgate Burn", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Figgate+Park%2C+Mountcastle+Drive+North%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-30", type:"Site", place:"Blackford Hill", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Blackford+Hill%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-31", type:"Site", place:"Warriston Cemetary", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Warriston+Cemetery%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-32", type:"Site", place:"Dean Village Edinburgh", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Dean+Village%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-33", type:"Site", place:"Inverleith Park", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Inverleith+Park%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-34", type:"Site", place:"Lauriston Castle", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Lauriston+Castle%2C+2A+Cramond+Road+South%2C+Edinburgh+EH4+5QD%2C+Scotland" },
+      { id:"sight-35", type:"Site", place:"Dunbars Close", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Dunbar%27s+Close+Garden%2C+137+Canongate%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-36", type:"Site", place:"Royal Botanic Garden", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Royal+Botanic+Garden+Edinburgh%2C+Scotland" },
+      { id:"sight-37", type:"Site", place:"Dr Neils Garden", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Dr+Neil%27s+Garden%2C+Old+Church+Lane%2C+Duddingston%2C+Edinburgh+EH15+3PX%2C+Scotland" },
+      { id:"sight-38", type:"Site", place:"Palace of Holyrood House", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Palace+of+Holyroodhouse%2C+Canongate%2C+Edinburgh+EH8+8DX%2C+Scotland" },
+      { id:"sight-39", type:"Site", place:"The Witches Well", onItinerary:true, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Witches+Well%2C+Castlehill%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-40", type:"Site", place:"Museum Context HP Store", onItinerary:true, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Museum+Context%2C+40+Victoria+Street%2C+Edinburgh+EH1+2JW%2C+Scotland" },
+      { id:"sight-41", type:"Site", place:"Museum of Edinburgh", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Museum+of+Edinburgh%2C+142+Canongate%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-42", type:"Site", place:"Surgeons Hall Museum", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Surgeons%27+Hall+Museums%2C+Nicolson+Street%2C+Edinburgh+EH8+9DW%2C+Scotland" },
+      { id:"sight-43", type:"Shop", place:"Forever Vintage", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Forever+Vintage%2C+3-5+Hanover+Street%2C+Edinburgh+EH2+2DL%2C+Scotland" },
+      { id:"sight-44", type:"Site", place:"The Witchery", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=The+Witchery+by+the+Castle%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-45", type:"Shop", place:"McNaughtan's Bookshop", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=McNaughtan%27s+Bookshop%2C+3a+Haddington+Place%2C+Edinburgh+EH7+4AE%2C+Scotland" },
+      { id:"sight-46", type:"Shop", place:"Topping & Company Booksellers", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Topping+%26+Company+Booksellers%2C+2+Blenheim+Place%2C+Edinburgh+EH7+5JH%2C+Scotland" },
+      { id:"sight-47", type:"Shop", place:"Armchair Books", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Armchair+Books%2C+72-74+West+Port%2C+Edinburgh+EH1+2LE%2C+Scotland" },
+      { id:"sight-48", type:"Shop", place:"W. Armstrong & Son Vintage", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=W.+Armstrong+%26+Son%2C+83+Grassmarket%2C+Edinburgh+EH1+2HJ%2C+Scotland" },
+      { id:"sight-49", type:"Site", place:"George MacKenzie Mausoleum", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Covenanters%27+Prison+%28Black+Mausoleum%29%2C+Greyfriars+Kirkyard%2C+Edinburgh%2C+Scotland" },
+      { id:"sight-50", type:"Site", place:"Cockburn St", onItinerary:false, votes:[], url:"https://www.google.com/maps/search/?api=1&query=Cockburn+Street%2C+Edinburgh%2C+Scotland" }
+    ],
     featureRequests: [],
     chat: [],
     settlementLog: [],
@@ -939,6 +1013,14 @@
     try { localStorage.setItem(MATH_HELP_KEY, "1"); } catch(e){}
   }
 
+  var SIGHT_HELP_KEY = "scotland2026_seen_sight_help";
+  function hasSeenSightHelp(){
+    try { return localStorage.getItem(SIGHT_HELP_KEY) === "1"; } catch(e){ return false; }
+  }
+  function markSightHelpSeen(){
+    try { localStorage.setItem(SIGHT_HELP_KEY, "1"); } catch(e){}
+  }
+
   function myId(){ return localStorage.getItem(LS_KEY); }
   function me(){
     if (!state) return null;
@@ -1020,6 +1102,9 @@
     } else if (r.kind === "feature"){
       if (!state.featureRequests) state.featureRequests = [];
       state.featureRequests.push(data);
+    } else if (r.kind === "sight"){
+      if (!state.sightseeing) state.sightseeing = [];
+      state.sightseeing.push(data);
     } else if (r.kind === "settlement"){
       if (!state.settlementLog) state.settlementLog = [];
       state.settlementLog.push(data);
@@ -2809,6 +2894,203 @@
     document.getElementById("math-help-close").onclick = function(){ root.innerHTML = ""; };
   }
 
+  function openSightHelpModal(){
+    var root = document.getElementById("modal-root");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal modal-wide">' +
+        '<div class="modal-head"><h3>🔭 How Sightseeing works</h3><button class="icon-only" id="sight-help-close" title="Close">✕</button></div>' +
+        '<p>A running list of sites and shops everyone can vote on.</p>' +
+        '<div class="math-flow">' +
+          '<div class="math-step">' +
+            '<div class="math-step-num">▲</div>' +
+            '<div class="math-step-body">' +
+              '<div class="math-step-title">Upvote what you\'re excited about</div>' +
+              '<div class="math-step-desc">Tap <b>+</b> next to any place — up to <b>3 times each</b>. Tap <b>−</b> to take a vote back.</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="math-arrow">↓</div>' +
+          '<div class="math-step">' +
+            '<div class="math-step-num">📌</div>' +
+            '<div class="math-step-body">' +
+              '<div class="math-step-title">Confirmed stuff floats to the top</div>' +
+              '<div class="math-step-desc">Anything marked <b>On Itinerary</b> always sorts above the rest — click that column to toggle it. Everything else falls in below, highest-voted first.</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<p style="margin-top:14px;margin-bottom:0;">Got an idea that\'s not listed? Add it at the bottom of the page.</p>' +
+      '</div></div>';
+    document.getElementById("sight-help-close").onclick = function(){ root.innerHTML = ""; };
+  }
+
+  var SIGHT_TYPES = [
+    { key: "Site", emoji: "🏛️" },
+    { key: "Shop", emoji: "🛍️" },
+    { key: "Restaurant", emoji: "🍽️" },
+    { key: "Bar", emoji: "🍸" },
+    { key: "Other", emoji: "📍" }
+  ];
+  function sightTypeEmoji(type){
+    var match = SIGHT_TYPES.filter(function(t){ return t.key === type; })[0];
+    return match ? match.emoji : "📍";
+  }
+  function sightTypeOptionsHtml(selected){
+    return SIGHT_TYPES.map(function(t){
+      return '<option value="' + t.key + '"' + (t.key === selected ? " selected" : "") + '>' + t.key + '</option>';
+    }).join("");
+  }
+
+  function sightVoteCount(item, personId){
+    return (item.votes || []).filter(function(id){ return id === personId; }).length;
+  }
+
+  function sortedSightseeing(){
+    return (state.sightseeing || []).map(function(item, idx){ return { item: item, idx: idx }; })
+      .sort(function(a, b){
+        var ai = a.item.onItinerary ? 1 : 0, bi = b.item.onItinerary ? 1 : 0;
+        if (ai !== bi) return bi - ai;
+        var av = (a.item.votes || []).length, bv = (b.item.votes || []).length;
+        if (av !== bv) return bv - av;
+        return a.idx - b.idx;
+      })
+      .map(function(x){ return x.item; });
+  }
+
+  function sightVotersHtml(item){
+    var votes = item.votes || [];
+    if (!votes.length) return "";
+    var counts = {};
+    votes.forEach(function(pid){ counts[pid] = (counts[pid] || 0) + 1; });
+    var voters = state.participants.filter(function(p){ return counts[p.id]; });
+    if (!voters.length) return "";
+    return '<div class="avatars" style="margin-top:6px;">' + voters.map(function(p){
+      var c = counts[p.id];
+      return '<span class="avatar" data-tip="' + escapeAttr(p.name + (c > 1 ? " (×" + c + ")" : "")) + '" style="background:' + (p.color || "var(--accent)") + '">' + escapeHtml(p.tag || initials(p.name)) + '</span>';
+    }).join("") + '</div>';
+  }
+
+  function renderSightseeingRow(item, maxVotes){
+    var m = me();
+    var mine = m ? sightVoteCount(item, m.id) : 0;
+    var total = (item.votes || []).length;
+    var heat = maxVotes > 0 ? total / maxVotes : 0;
+    var rowStyle = heat > 0 ? ' style="background:color-mix(in srgb, var(--accent) ' + Math.round(heat * 38) + '%, var(--surface));"' : '';
+    var placeHtml = item.url
+      ? '<a href="' + escapeAttr(item.url) + '" target="_blank" rel="noopener" class="sight-place-link">' + escapeHtml(item.place) + ' <span class="sight-place-link-icon">↗</span></a>'
+      : escapeHtml(item.place);
+    return '<tr' + rowStyle + '>' +
+      '<td><span class="sight-type-badge">' + sightTypeEmoji(item.type) + ' ' + escapeHtml(item.type) + '</span></td>' +
+      '<td>' + placeHtml + sightVotersHtml(item) + '</td>' +
+      '<td><button class="sight-itin-toggle' + (item.onItinerary ? ' on' : '') + '" data-sight-itin-toggle="' + item.id + '" title="' + (item.onItinerary ? "On the itinerary — click to unmark" : "Not on the itinerary yet — click to mark") + '">' + (item.onItinerary ? "✓ Yes" : "No") + '</button></td>' +
+      '<td><div class="sight-vote">' +
+        '<button class="sight-vote-btn" data-sight-vote-dec="' + item.id + '" title="Remove one of your upvotes"' + (mine <= 0 ? " disabled" : "") + '>−</button>' +
+        '<span class="sight-vote-total mono" title="' + total + ' total upvote' + (total === 1 ? "" : "s") + (mine ? " · you: " + mine + "/3" : "") + '">▲ ' + total + '</span>' +
+        '<button class="sight-vote-btn" data-sight-vote-inc="' + item.id + '" title="Upvote — up to 3 each"' + (mine >= 3 ? " disabled" : "") + '>+</button>' +
+      '</div></td>' +
+      '<td><div class="row-actions">' +
+        '<button class="icon-only" data-edit-sight="' + item.id + '" title="Edit">✎</button>' +
+        '<button class="icon-only" data-del-sight="' + item.id + '" title="Delete">' + TRASH_ICON_SVG + '</button>' +
+      '</div></td>' +
+    '</tr>';
+  }
+
+  function renderSightseeing(){
+    var items = sortedSightseeing();
+    var maxVotes = items.length ? Math.max.apply(null, items.map(function(i){ return (i.votes || []).length; })) : 0;
+    var html = '<div class="section-head"><div><h2>Sightseeing</h2><p>Vote for what you want to do — up to three upvotes per person, per option. <button class="math-help-link" id="sight-help-open">❔ How does this work?</button></p></div><button class="btn" data-add-sight>+ Add place</button></div>';
+    html += '<div class="card" style="padding:0; overflow-x:auto;"><table>' +
+      '<thead><tr><th>Type</th><th>Place</th><th>On Itinerary?</th><th>Votes</th><th></th></tr></thead>' +
+      '<tbody>' + (items.length ? items.map(function(item){ return renderSightseeingRow(item, maxVotes); }).join("") : '<tr><td colspan="5"><div class="empty">No sightseeing options yet.</div></td></tr>') + '</tbody>' +
+    '</table></div>';
+    document.getElementById("panel-sightseeing").innerHTML = html;
+  }
+
+  function addSightseeingVote(id){
+    if (blockIfGuest()) return;
+    var m = me();
+    if (!m) return promptIdentity(false);
+    var item = (state.sightseeing || []).find(function(x){ return x.id === id; });
+    if (!item) return;
+    if (!item.votes) item.votes = [];
+    if (sightVoteCount(item, m.id) >= 3) return;
+    item.votes.push(m.id);
+    scheduleSave();
+    renderSightseeing();
+  }
+
+  function removeSightseeingVote(id){
+    if (blockIfGuest()) return;
+    var m = me();
+    if (!m) return promptIdentity(false);
+    var item = (state.sightseeing || []).find(function(x){ return x.id === id; });
+    if (!item || !item.votes) return;
+    var idx = item.votes.lastIndexOf(m.id);
+    if (idx === -1) return;
+    item.votes.splice(idx, 1);
+    scheduleSave();
+    renderSightseeing();
+  }
+
+  function toggleSightseeingItinerary(id){
+    if (blockIfGuest()) return;
+    var item = (state.sightseeing || []).find(function(x){ return x.id === id; });
+    if (!item) return;
+    item.onItinerary = !item.onItinerary;
+    logActivity((item.onItinerary ? 'marked "' : 'unmarked "') + item.place + '" as ' + (item.onItinerary ? "on" : "not on") + ' the itinerary');
+    scheduleSave();
+    renderSightseeing();
+  }
+
+  function openSightModal(existingId){
+    if (blockIfGuest()) return;
+    var existing = existingId ? (state.sightseeing || []).find(function(x){ return x.id === existingId; }) : null;
+    var root = document.getElementById("modal-root");
+    root.innerHTML =
+      '<div class="modal-backdrop"><div class="modal">' +
+        '<h3>' + (existing ? "Edit" : "Add") + ' sightseeing option</h3>' +
+        '<div class="field"><label>Type</label><select id="sight-type">' + sightTypeOptionsHtml(existing ? existing.type : "Site") + '</select></div>' +
+        '<div class="field"><label>Place</label><input type="text" id="sight-place" value="' + escapeAttr(existing ? existing.place || "" : "") + '" placeholder="Name of the place"></div>' +
+        '<div class="field"><label>Link (optional)</label><input type="url" id="sight-url" value="' + escapeAttr(existing ? existing.url || "" : "") + '" placeholder="Google Maps, website, etc."></div>' +
+        '<div class="field"><label>On the itinerary?</label><select id="sight-onitin">' +
+          '<option value="0"' + (!(existing && existing.onItinerary) ? " selected" : "") + '>Not yet</option>' +
+          '<option value="1"' + (existing && existing.onItinerary ? " selected" : "") + '>Yes</option>' +
+        '</select></div>' +
+        '<div class="actions">' +
+          '<button class="btn secondary" id="sight-cancel">Cancel</button>' +
+          '<button class="btn" id="sight-save">Save</button>' +
+        '</div>' +
+      '</div></div>';
+    document.getElementById("sight-cancel").onclick = function(){ root.innerHTML = ""; };
+    document.getElementById("sight-save").onclick = function(){
+      var type = document.getElementById("sight-type").value;
+      var place = document.getElementById("sight-place").value.trim();
+      var url = document.getElementById("sight-url").value.trim();
+      var onItinerary = document.getElementById("sight-onitin").value === "1";
+      if (!place) return;
+      if (existing){
+        existing.type = type; existing.place = place; existing.url = url; existing.onItinerary = onItinerary;
+        logActivity('edited "' + place + '" in Sightseeing');
+      } else {
+        if (!state.sightseeing) state.sightseeing = [];
+        state.sightseeing.push({ id: uid("sight"), type: type, place: place, url: url, onItinerary: onItinerary, votes: [] });
+        logActivity('added "' + place + '" to Sightseeing', "join");
+      }
+      root.innerHTML = "";
+      scheduleSave();
+      renderSightseeing();
+    };
+  }
+
+  function deleteSightseeingItem(id){
+    if (blockIfGuest()) return;
+    var idx = (state.sightseeing || []).findIndex(function(x){ return x.id === id; });
+    if (idx === -1) return;
+    var item = state.sightseeing[idx];
+    state.sightseeing.splice(idx, 1);
+    logActivity('deleted "' + item.place + '" from Sightseeing', "remove", { kind: "sight", data: item, label: item.place });
+    scheduleSave();
+    renderSightseeing();
+  }
+
   function renderBudget(){
     var bal = computeBalances();
     var settlements = computeSettlements(bal);
@@ -3237,6 +3519,7 @@
     renderLodging();
     renderFlights();
     renderItinerary();
+    renderSightseeing();
     renderBudget();
     renderIdentityChip();
     renderBrandSub();
@@ -3255,6 +3538,10 @@
     if (key === "budget" && !hasSeenMathHelp()){
       markMathHelpSeen();
       openMathHelpModal();
+    }
+    if (key === "sightseeing" && !hasSeenSightHelp()){
+      markSightHelpSeen();
+      openSightHelpModal();
     }
   }
   document.addEventListener("click", function(e){
@@ -3486,6 +3773,18 @@
       if (editMoment){ openMomentModal(editMoment.dataset.momentDay, editMoment.dataset.editMoment); return; }
       var delMoment = t.closest("[data-del-moment]");
       if (delMoment){ deleteMoment(delMoment.dataset.momentDay, delMoment.dataset.delMoment); return; }
+      var sightVoteInc = t.closest("[data-sight-vote-inc]");
+      if (sightVoteInc){ addSightseeingVote(sightVoteInc.dataset.sightVoteInc); return; }
+      var sightVoteDec = t.closest("[data-sight-vote-dec]");
+      if (sightVoteDec){ removeSightseeingVote(sightVoteDec.dataset.sightVoteDec); return; }
+      var sightItinToggle = t.closest("[data-sight-itin-toggle]");
+      if (sightItinToggle){ toggleSightseeingItinerary(sightItinToggle.dataset.sightItinToggle); return; }
+      if (t.closest("[data-add-sight]")){ openSightModal(null); return; }
+      var editSight = t.closest("[data-edit-sight]");
+      if (editSight){ openSightModal(editSight.dataset.editSight); return; }
+      var delSight = t.closest("[data-del-sight]");
+      if (delSight){ deleteSightseeingItem(delSight.dataset.delSight); return; }
+      if (t.closest("#sight-help-open")){ openSightHelpModal(); return; }
     });
     document.querySelector("main").addEventListener("keydown", function(e){
       if (e.key === "Enter" && e.target.matches && e.target.matches("[data-comment-input]")){
@@ -3667,6 +3966,16 @@
         m.people = m.people || [];
         m.comments = m.comments || [];
       });
+    });
+    if (!state.sightseeing) state.sightseeing = JSON.parse(JSON.stringify(DEFAULT_STATE.sightseeing));
+    state.sightseeing.forEach(function(item){
+      item.onItinerary = !!item.onItinerary;
+      item.votes = item.votes || [];
+      item.type = item.type || "Site";
+      if (!item.url){
+        var seed = DEFAULT_STATE.sightseeing.find(function(s){ return s.id === item.id; });
+        item.url = seed ? seed.url : "";
+      }
     });
     state.expenses = state.expenses || [];
     state.expenses.forEach(function(e){
